@@ -101,4 +101,12 @@ public class SolutionTest {
 		assertArrayEquals(solution.permutationsInLongString("abbc","cbabadcbbabbcbabaabccbabc"),
 				new String[]{"cbab","cbba","abbc","bcba","cbab","cbab","babc"});
 	}
+
+	@Test
+	@DisplayName("find all permutations of the shorter string within the longer one")
+	@Tag("Cracking The Coding lnterview")
+	void testpermutationsInLongString2() {
+		assertArrayEquals(solution.permutationsInLongString2("abbc","cbabadcbbabbcbabaabccbabc"),
+				new String[]{"cbab","cbba","abbc","bcba","cbab","cbab","babc"});
+	}
 }

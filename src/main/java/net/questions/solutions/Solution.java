@@ -6,6 +6,55 @@ import java.util.List;
 
 public class Solution {
 
+	static final int MAX_CHAR_COUNT = 256;	// extended ASCII char count
+
+	/**
+	 * @category: Cracking The Coding lnterview
+	 * @apiNote:  Given a smaller strings and a bigger string b, design an algorithm to find all permutations of the shorter string within the longer one.
+	 * Print the location of each permutation
+	 * @implNote time complexity; n:= length of b, m:= length of s => O(256 * n) = O(n)
+	 */
+	public String[] permutationsInLongString2(String s, String b){
+		int M = s.length();
+		int N = b.length();
+		List<String> result = new ArrayList<>();
+
+		// countP[]:  Store count of all characters of s
+		// countTW[]: Store count of current window of b
+		char[] sMap = new char[MAX_CHAR_COUNT];
+		char[] bMap = new char[MAX_CHAR_COUNT];
+		for (int i = 0; i < M; i++){
+			(sMap[s.charAt(i)])++;
+			(bMap[b.charAt(i)])++;
+		}
+
+		// Traverse through remaining characters of pattern
+		for (int i = M; i < N; i++){
+			// Compare counts of current window of text with counts of pattern[]
+			if (compare(sMap, bMap))
+				result.add(b.substring(i-M,i-M+s.length()));
+
+			// Add current character to current window
+			(bMap[b.charAt(i)])++;
+
+			// Remove the first character of previous window
+			bMap[b.charAt(i-M)]--;
+		}
+
+		// Check for the last window in text
+		if (compare(sMap, bMap))
+			result.add(b.substring(N-M,N-M+s.length()));
+		return result.toArray(new String[result.size()]);
+	}
+
+	// This function returns true if contents of arr1[] and arr2[] are same, otherwise false.
+	private boolean compare(char arr1[], char arr2[]){
+		for (int i = 0; i < MAX_CHAR_COUNT; i++)	// fixed-size iteration
+			if (arr1[i] != arr2[i])
+				return false;
+		return true;
+	}
+
 	/**
 	 * @category: Cracking The Coding lnterview
 	 * @apiNote:  Given a smaller strings and a bigger string b, design an algorithm to find all permutations of the shorter string within the longer one.
