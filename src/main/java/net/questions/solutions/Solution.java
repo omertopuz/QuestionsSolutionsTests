@@ -1,6 +1,35 @@
 package net.questions.solutions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class Solution {
+
+	/**
+	 * @category: Cracking The Coding lnterview
+	 * @apiNote:  Given a smaller strings and a bigger string b, design an algorithm to find all permutations of the shorter string within the longer one.
+	 * Print the location of each permutation
+	 * @implNote time complexity; n:= length of b, m:= length of s => O(n m log(m))
+	 */
+	public String[] permutationsInLongString(String s, String b) {
+		char[] sArray = s.toCharArray();
+		Arrays.sort(sArray);
+		String orderedS = new String(sArray);
+		List<String> result = new ArrayList<>();
+
+		for (int i = 0;i<b.length()-s.length()+1;i++){
+			String bPartial = b.substring(i,i+s.length());
+			char[] bPartialArray = bPartial.toCharArray();
+			Arrays.sort(bPartialArray);
+			String orderedbPartialArray = new String(bPartialArray);
+			if (orderedS.equals(orderedbPartialArray)){
+				System.out.println(bPartial);
+				result.add(bPartial);
+			}
+		}
+		return result.toArray(new String[result.size()]);
+	}
 
 	/**
 	 * @category: LeetCode

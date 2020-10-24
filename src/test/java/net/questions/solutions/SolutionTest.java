@@ -1,16 +1,13 @@
 package net.questions.solutions;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestReporter;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SolutionTest {
 
@@ -95,5 +92,13 @@ public class SolutionTest {
 				() -> assertEquals(solution.lengthOfLongestSubstring("ckilbkd"),5),
 				() -> assertEquals(solution.lengthOfLongestSubstring("dvdf"),3)
 		);
+	}
+
+	@Test
+	@DisplayName("find all permutations of the shorter string within the longer one")
+	@Tag("Cracking The Coding lnterview")
+	void testpermutationsInLongString() {
+		assertArrayEquals(solution.permutationsInLongString("abbc","cbabadcbbabbcbabaabccbabc"),
+				new String[]{"cbab","cbba","abbc","bcba","cbab","cbab","babc"});
 	}
 }
