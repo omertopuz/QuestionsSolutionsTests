@@ -96,7 +96,7 @@ public class SolutionTest {
 
 	@Test
 	@DisplayName("find all permutations of the shorter string within the longer one")
-	@Tag("Cracking The Coding lnterview")
+	@Tag("Cracking_The_Coding_lnterview")
 	void testpermutationsInLongString() {
 		assertArrayEquals(solution.permutationsInLongString("abbc","cbabadcbbabbcbabaabccbabc"),
 				new String[]{"cbab","cbba","abbc","bcba","cbab","cbab","babc"});
@@ -104,9 +104,17 @@ public class SolutionTest {
 
 	@Test
 	@DisplayName("find all permutations of the shorter string within the longer one")
-	@Tag("Cracking The Coding lnterview")
+	@Tag("Cracking_The_Coding_lnterview")
 	void testpermutationsInLongString2() {
 		assertArrayEquals(solution.permutationsInLongString2("abbc","cbabadcbbabbcbabaabccbabc"),
 				new String[]{"cbab","cbba","abbc","bcba","cbab","cbab","babc"});
+	}
+
+	@Test
+	@DisplayName("find all permutations")
+	@Tag("Cracking_The_Coding_lnterview")
+	void testpermutations() {
+		assertArrayEquals(solution.permute("abc"),
+				new String[]{"abc","acb","bac","bca","cba","cab"});
 	}
 }

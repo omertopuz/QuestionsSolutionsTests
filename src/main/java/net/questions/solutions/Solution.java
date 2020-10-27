@@ -8,6 +8,31 @@ public class Solution {
 
 	static final int MAX_CHAR_COUNT = 256;	// extended ASCII char count
 
+	public String[] permute(String s) {
+		List<String> result = new ArrayList<String>();
+		permute(s.toCharArray(), 0,result);
+		return result.toArray(new String[result.size()]);
+	}
+
+	private void permute(char[] sCharArray,int  l,List<String> result) {
+		if (l == sCharArray.length - 1) {
+//			System.out.println(sCharArray);
+			result.add(new String(sCharArray));
+		}
+
+		for(int i=l;i<sCharArray.length;i++) {
+			swap(sCharArray,l,i);
+			permute(sCharArray, l+1,result);
+			swap(sCharArray,l,i);
+		}
+	}
+
+	private void swap(char[] c,int i, int l) {
+		char temp = c[i];
+		c[i] = c[l];
+		c[l] = temp;
+	}
+
 	/**
 	 * @category: Cracking The Coding lnterview
 	 * @apiNote:  Given a smaller strings and a bigger string b, design an algorithm to find all permutations of the shorter string within the longer one.
@@ -17,7 +42,7 @@ public class Solution {
 	public String[] permutationsInLongString2(String s, String b){
 		int M = s.length();
 		int N = b.length();
-		List<String> result = new ArrayList<>();
+		List<String> result = new ArrayList<String>();
 
 		// countP[]:  Store count of all characters of s
 		// countTW[]: Store count of current window of b
@@ -65,7 +90,7 @@ public class Solution {
 		char[] sArray = s.toCharArray();
 		Arrays.sort(sArray);
 		String orderedS = new String(sArray);
-		List<String> result = new ArrayList<>();
+		List<String> result = new ArrayList<String>();
 
 		for (int i = 0;i<b.length()-s.length()+1;i++){
 			String bPartial = b.substring(i,i+s.length());
@@ -73,7 +98,7 @@ public class Solution {
 			Arrays.sort(bPartialArray);
 			String orderedbPartialArray = new String(bPartialArray);
 			if (orderedS.equals(orderedbPartialArray)){
-				System.out.println(bPartial);
+//				System.out.println(bPartial);
 				result.add(bPartial);
 			}
 		}
@@ -103,10 +128,10 @@ public class Solution {
 		}
 
 		if (diffCounter == 0) {
-			String repatedTemplate = "";
+			String repeatedTemplate = "";
 			for (int i = 0; i < aArray.length; i++) {
-				repatedTemplate += aArray[i];
-				if (!A.equals(repatedTemplate) && A.split(repatedTemplate).length == 0)
+				repeatedTemplate += aArray[i];
+				if (!A.equals(repeatedTemplate) && A.split(repeatedTemplate).length == 0)
 					return true;
 			}
 			return false;
