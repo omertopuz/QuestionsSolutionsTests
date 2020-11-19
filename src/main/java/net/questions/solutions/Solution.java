@@ -1,10 +1,42 @@
 package net.questions.solutions;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Solution {
+
+	/**
+	 * @category: Cracking The Coding lnterview
+	 * @apiNote:  Numbers are randomly generated and stored into an (expanding) array. keep track of the median
+	 * @implNote time complexity; n:= length of b, m:= length of s => O(256 * n) = O(n)
+	 */
+	public IntHeap minHeap = new IntHeap(IntHeap.MinMaxType.MIN_HEAP);
+	public IntHeap maxHeap = new IntHeap(IntHeap.MinMaxType.MAX_HEAP);
+//	PriorityQueue<Integer> minHeap = new PriorityQueue<>(10); // for saving bigger elements
+//	PriorityQueue<Integer> maxHeap = new PriorityQueue<>(10,Collections.reverseOrder()); // for saving smaller elements
+	public int medianOfExpandingArray(int val) {
+		int median = 0;
+
+		if (val<minHeap.peek()){
+			maxHeap.add(val);
+		}else {
+			minHeap.add(val);
+		}
+
+		if (maxHeap.size()> minHeap.size()+1){
+			minHeap.add(maxHeap.poll());
+		}else if (minHeap.size()> maxHeap.size()+1){
+			maxHeap.add(minHeap.poll());
+		}
+
+		if (minHeap.size()==maxHeap.size())
+			median = (minHeap.peek()+ maxHeap.peek())/2;
+		else if (minHeap.size()> maxHeap.size())
+			median = minHeap.peek();
+		else if (maxHeap.size()>minHeap.size())
+			median = maxHeap.peek();
+
+		return median;
+	}
 
 	static final int MAX_CHAR_COUNT = 256;	// extended ASCII char count
 

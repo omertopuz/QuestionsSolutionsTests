@@ -9,7 +9,7 @@ import org.junit.jupiter.api.TestReporter;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SolutionTest {
+class SolutionTest {
 
 	private Solution solution;
 
@@ -116,5 +116,29 @@ public class SolutionTest {
 	void testpermutations() {
 		assertArrayEquals(solution.permute("abc"),
 				new String[]{"abc","acb","bac","bca","cba","cab"});
+	}
+
+	@Test
+	@DisplayName("keep track of the median")
+	@Tag("Cracking_The_Coding_lnterview")
+	void test_medianOfExpandingArray() {
+		//22,49,44,38,37,1,6,13,5,30,21,44,4,32,14
+		assertAll(
+				() -> assertEquals(solution.medianOfExpandingArray(22),22),
+				() -> assertEquals(solution.medianOfExpandingArray(49),35),
+				() -> assertEquals(solution.medianOfExpandingArray(44),44),
+				() -> assertEquals(solution.medianOfExpandingArray(38),41),
+				() -> assertEquals(solution.medianOfExpandingArray(37),38),
+				() -> assertEquals(solution.medianOfExpandingArray(1),37),
+				() -> assertEquals(solution.medianOfExpandingArray(6),37),
+				() -> assertEquals(solution.medianOfExpandingArray(13),29),
+				() -> assertEquals(solution.medianOfExpandingArray(5),22),
+				() -> assertEquals(solution.medianOfExpandingArray(30),26),
+				() -> assertEquals(solution.medianOfExpandingArray(21),22),
+				() -> assertEquals(solution.medianOfExpandingArray(44),26),
+				() -> assertEquals(solution.medianOfExpandingArray(4),22),
+				() -> assertEquals(solution.medianOfExpandingArray(32),26),
+				() -> assertEquals(solution.medianOfExpandingArray(14),22)
+		);
 	}
 }
