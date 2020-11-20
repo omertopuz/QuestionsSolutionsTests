@@ -141,4 +141,26 @@ class SolutionTest {
 				() -> assertEquals(solution.medianOfExpandingArray(14),22)
 		);
 	}
+
+
+	@Test
+	@DisplayName("Balanced Brackets")
+	@Tag("Hackerrank")
+	void test_isBalanced() {
+		assertAll(
+				() -> assertEquals(solution.isBalanced("{[()]}"),"YES"),
+				() -> assertEquals(solution.isBalanced("{[(])}"),"NO"),
+				() -> assertEquals(solution.isBalanced("{{[[(())]]}}"),"YES"),
+				() -> assertEquals(solution.isBalanced("{(([])[])[]}"),"YES"),
+				() -> assertEquals(solution.isBalanced("{(([])[])[]]}"),"NO"),
+				() -> assertEquals(solution.isBalanced("{(([])[])[]}[]"),"YES"),
+
+				() -> assertEquals(solution.isBalanced("}][}}(}][))]"),"NO"),
+				() -> assertEquals(solution.isBalanced("[](){()}"),"YES"),
+				() -> assertEquals(solution.isBalanced("()"),"YES"),
+				() -> assertEquals(solution.isBalanced("({}([][]))[]()"),"YES"),
+				() -> assertEquals(solution.isBalanced("{)[](}]}]}))}(())("),"NO"),
+				() -> assertEquals(solution.isBalanced("([[)"),"NO")
+		);
+	}
 }

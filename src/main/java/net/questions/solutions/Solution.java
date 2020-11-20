@@ -5,9 +5,58 @@ import java.util.*;
 public class Solution {
 
 	/**
+	 * @category: Hackerrank
+	 * @apiNote:  Complete the function isBalanced in the editor below. It must return a string: YES if the sequence is balanced or NO if it is not.
+	 * @implNote time complexity;
+	 */
+	public String isBalanced(String s) {
+		if (s.length()%2 == 1)
+			return "NO";
+
+		char[] unMatchedBrackets = new char[s.length()];
+
+		int unMatchedBracketCount = 0;
+
+		for (int i = 0;i<s.length();i++){
+
+			switch (s.charAt(i)){
+				case '{':
+				case '[':
+				case '(':
+					unMatchedBrackets[unMatchedBracketCount++] = s.charAt(i);
+					break;
+				case '}':
+					if (unMatchedBracketCount<=0
+							|| unMatchedBrackets[--unMatchedBracketCount] !='{')
+						return "NO";
+					break;
+				case ']':
+					if (unMatchedBracketCount<=0
+							|| unMatchedBrackets[--unMatchedBracketCount] !='[')
+						return "NO";
+					break;
+				case ')':
+					if (unMatchedBracketCount<=0
+							|| unMatchedBrackets[--unMatchedBracketCount] !='(')
+						return "NO";
+					break;
+				default:return "NO";
+			}
+
+		}
+
+		return unMatchedBracketCount == 0 ? "YES":"NO";
+	}
+
+//	private String isBalanced(char[] bracketArray, int position){
+//		if ()
+//		isBalanced(bracketArray,++position);
+//	}
+
+	/**
 	 * @category: Cracking The Coding lnterview
 	 * @apiNote:  Numbers are randomly generated and stored into an (expanding) array. keep track of the median
-	 * @implNote time complexity; n:= length of b, m:= length of s => O(256 * n) = O(n)
+	 * @implNote time complexity;
 	 */
 	public IntHeap minHeap = new IntHeap(IntHeap.MinMaxType.MIN_HEAP);
 	public IntHeap maxHeap = new IntHeap(IntHeap.MinMaxType.MAX_HEAP);
