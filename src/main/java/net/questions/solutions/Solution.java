@@ -5,9 +5,59 @@ import java.util.*;
 public class Solution {
 
 	/**
+	 * @category: LeetCode
+	 * @apiNote:  Complete the function isBalanced in the editor below. It must return a string: YES if the sequence is balanced or NO if it is not.
+	 * @implNote time complexity; O(n) under assumption that HashMap.containsKey method has complexity of O(1)
+	 * @see Javascript implementation below
+	 * function twoSum(inputArray, target) {
+	 *     var tempArray = [];
+	 *
+	 *     for (i = 0; i < inputArray.length; i++) {
+	 *         if (tempArray[inputArray[i] + ""] == undefined) {
+	 *             tempArray[inputArray[i] + ""] = [];
+	 *             tempArray[inputArray[i] + ""][0] = 0;
+	 *             tempArray[inputArray[i] + ""][1] = 0;
+	 *         }
+	 *
+	 *         tempArray[inputArray[i] + ""][0]++;
+	 *         tempArray[inputArray[i] + ""][1] = i;
+	 *
+	 *         if (tempArray[(target - inputArray[i]) + ""] == undefined) {
+	 *             tempArray[(target - inputArray[i]) + ""] = [];
+	 *             tempArray[(target - inputArray[i]) + ""][0] = 0;
+	 *             tempArray[(target - inputArray[i]) + ""][1] = 0;
+	 *         }
+	 *         tempArray[(target - inputArray[i]) + ""][0]++;
+	 *     }
+	 *
+	 *     var result = [];
+	 *     var index = 0;
+	 *     for (i = 0; i < inputArray.length; i++) {
+	 *         if (tempArray[inputArray[i] + ""][0] > 1) {
+	 *             result[index++] = [tempArray[inputArray[i] + ""][1], tempArray[(target - inputArray[i]) + ""][1]];
+	 *         }
+	 *     }
+	 *
+	 *     return result;
+	 * }
+	 */
+	public int[] twoSum(int[] nums, int target) {
+		Map<Integer, Integer> ranks = new HashMap<>();
+		for (int i = 0; i < nums.length; i++) {
+			int complement = target - nums[i];
+			if (ranks.containsKey(complement)) {
+				return new int[] { ranks.get(complement), i };
+			}
+			ranks.put(nums[i], i);
+		}
+
+		return null;
+	}
+
+	/**
 	 * @category: Hackerrank
 	 * @apiNote:  Complete the function isBalanced in the editor below. It must return a string: YES if the sequence is balanced or NO if it is not.
-	 * @implNote time complexity;
+	 * @implNote time complexity; O(n)
 	 */
 	public String isBalanced(String s) {
 		if (s.length()%2 == 1)

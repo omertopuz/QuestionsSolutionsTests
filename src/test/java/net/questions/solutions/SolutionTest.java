@@ -163,4 +163,16 @@ class SolutionTest {
 				() -> assertEquals(solution.isBalanced("([[)"),"NO")
 		);
 	}
+
+	@Test
+	@DisplayName("Two Sum")
+	@Tag("LeetCode")
+	void testTwoSum() {
+		assertAll(
+				() -> assertArrayEquals(solution.twoSum(new int[] {0,3,12,31,9,-3,0,4,15},9),new int[]{0,4})
+				,() -> assertArrayEquals(solution.twoSum(new int[] {2,7,11,15},9),new int[]{0,1})
+				,() -> assertArrayEquals(solution.twoSum(new int[] {3,2,4},6),new int[]{1,2})
+				,() -> assertArrayEquals(solution.twoSum(new int[] {15,23,56},1),null)
+		);
+	}
 }
