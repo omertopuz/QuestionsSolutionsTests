@@ -104,7 +104,7 @@ public class Solution {
 //	}
 
 	/**
-	 * @category: Cracking The Coding lnterview
+	 * @category: Cracking The Coding Interview
 	 * @apiNote:  Numbers are randomly generated and stored into an (expanding) array. keep track of the median
 	 * @implNote time complexity;
 	 */
@@ -165,7 +165,7 @@ public class Solution {
 	}
 
 	/**
-	 * @category: Cracking The Coding lnterview
+	 * @category: Cracking The Coding Interview
 	 * @apiNote:  Given a smaller strings and a bigger string b, design an algorithm to find all permutations of the shorter string within the longer one.
 	 * Print the location of each permutation
 	 * @implNote time complexity; n:= length of b, m:= length of s => O(256 * n) = O(n)
@@ -212,7 +212,7 @@ public class Solution {
 	}
 
 	/**
-	 * @category: Cracking The Coding lnterview
+	 * @category: Cracking The Coding Interview
 	 * @apiNote:  Given a smaller strings and a bigger string b, design an algorithm to find all permutations of the shorter string within the longer one.
 	 * Print the location of each permutation
 	 * @implNote time complexity; n:= length of b, m:= length of s => O(n m log(m))
