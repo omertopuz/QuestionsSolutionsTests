@@ -3,6 +3,45 @@ package net.questions.solutions;
 import java.util.*;
 
 public class Solution {
+	/**
+	 * @category: LeetCode
+	 * @apiNote: Given an m x n matrix, return all elements of the matrix in spiral order.
+	 * @implNote time complexity; O(n)
+	 */
+	public List<Integer> spiralOrder(int[][] matrix) {
+		int cRow = matrix.length;
+		int cCol = matrix[0].length;
+		List<Integer> result = new ArrayList<>();
+		int cMin = 0,visitedCellCount = 0;
+		while (visitedCellCount < cRow * cCol){
+			for (int i = cMin; i <cCol - cMin; i++){
+				visitedCellCount++;
+				result.add(matrix[cMin][i]);
+			}
+
+			for (int i = cMin+1; i <cRow - cMin; i++){
+				visitedCellCount++;
+				result.add(matrix[i][cCol-(cMin+1)]);
+			}
+
+			if(visitedCellCount == cRow * cCol)	// 1 x n and n x 1 matrices
+				break;
+
+			for (int i = cCol - (cMin+2); i >=cMin; i--){
+				visitedCellCount++;
+				result.add(matrix[cRow-(cMin+1)][i]);
+			}
+			if(visitedCellCount == cRow * cCol)
+				break;
+			for (int i = cRow - (cMin+2); i > cMin; i--){
+				visitedCellCount++;
+				result.add(matrix[i][cMin]);
+			}
+			cMin++;
+		}
+
+		return result;
+	}
 
 	/**
 	 * @category: LeetCode
