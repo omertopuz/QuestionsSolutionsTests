@@ -219,6 +219,10 @@ class SolutionTest {
 		int[][] inp7 = new int[][]{new int[]{}};
 		List<Integer> out7 = IntStream.range(1,1).boxed().collect(Collectors.toList());
 
+		int[][] inp8 = new int[][]{new int[]{1,2,3,4,5,6,7}
+				,new int[]{14,13,12,11,10,9,8}
+		};
+		List<Integer> out8 = IntStream.range(1,15).boxed().collect(Collectors.toList());
 		assertAll(
 				() -> assertIterableEquals(solution.spiralOrder(inp1), out1)
 				,() -> assertIterableEquals(solution.spiralOrder(inp2), out2)
@@ -227,6 +231,62 @@ class SolutionTest {
 				,() -> assertIterableEquals(solution.spiralOrder(inp5), out5)
 				,() -> assertIterableEquals(solution.spiralOrder(inp6), out6)
 				,() -> assertIterableEquals(solution.spiralOrder(inp7), out7)
+				,() -> assertIterableEquals(solution.spiralOrder(inp8), out8)
+		);
+	}
+
+	@Test
+	@DisplayName("Spiral Matrix by recursion")
+	@Tag("LeetCode")
+	void testGetMatrixInSpiralOrderRecursion() {
+		int[][] inp1 = new int[][]{
+				new int[]{1,2,3,4,5}
+				,new int[]{16,17,18,19,6}
+				,new int[]{15,24,25,20,7}
+				,new int[]{14,23,22,21,8}
+				,new int[]{13,12,11,10,9}
+		};
+		List<Integer> out1 = IntStream.range(1,26).boxed().collect(Collectors.toList());
+
+		int[][] inp2 = new int[][]{
+				new int[]{1,2,3},new int[]{4,5,6},new int[]{7,8,9}
+		};
+		List<Integer> out2 = Stream.of(1,2,3,6,9,8,7,4,5).collect(Collectors.toList());
+
+		int[][] inp3 = new int[][]{new int[]{1,2,3,4,5}};
+		List<Integer> out3 = IntStream.range(1,6).boxed().collect(Collectors.toList());
+
+		int[][] inp4 = new int[][]{new int[]{1},new int[]{2},new int[]{3},new int[]{4},new int[]{5}};
+		List<Integer> out4 = IntStream.range(1,6).boxed().collect(Collectors.toList());
+
+		int[][] inp5 = new int[][]{new int[]{1,2,3}
+				,new int[]{12,13,4}
+				,new int[]{11,14,5}
+				,new int[]{10,15,6}
+				,new int[]{9,8,7}
+		};
+		List<Integer> out5 = IntStream.range(1,16).boxed().collect(Collectors.toList());
+
+		int[][] inp6 = new int[][]{new int[]{1}};
+		List<Integer> out6 = IntStream.range(1,2).boxed().collect(Collectors.toList());
+		int[][] inp7 = new int[][]{new int[]{}};
+		List<Integer> out7 = IntStream.range(1,1).boxed().collect(Collectors.toList());
+
+
+		int[][] inp8 = new int[][]{new int[]{1,2,3,4,5,6,7}
+				,new int[]{14,13,12,11,10,9,8}
+		};
+		List<Integer> out8 = IntStream.range(1,15).boxed().collect(Collectors.toList());
+
+		assertAll(
+				() -> assertIterableEquals(solution.spiralOrderWithRecursion(inp1), out1)
+				,() -> assertIterableEquals(solution.spiralOrderWithRecursion(inp2), out2)
+				,() -> assertIterableEquals(solution.spiralOrderWithRecursion(inp3), out3)
+				,() -> assertIterableEquals(solution.spiralOrderWithRecursion(inp4), out4)
+				,() -> assertIterableEquals(solution.spiralOrderWithRecursion(inp5), out5)
+				,() -> assertIterableEquals(solution.spiralOrderWithRecursion(inp6), out6)
+				,() -> assertIterableEquals(solution.spiralOrderWithRecursion(inp7), out7)
+				,() -> assertIterableEquals(solution.spiralOrderWithRecursion(inp8), out8)
 		);
 	}
 }

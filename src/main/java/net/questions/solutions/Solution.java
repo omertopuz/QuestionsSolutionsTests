@@ -8,6 +8,47 @@ public class Solution {
 	 * @apiNote: Given an m x n matrix, return all elements of the matrix in spiral order.
 	 * @implNote time complexity; O(n)
 	 */
+	public List<Integer> spiralOrderWithRecursion(int[][] matrix) {
+		return spiralOrderWithRecursion(new ArrayList<>(),matrix,0);
+	}
+
+	private List<Integer> spiralOrderWithRecursion(List<Integer> result,int[][] matrix, int loopCounter ){
+		int cRow = matrix.length;
+		int cCol = matrix[0].length;
+		int minOfRowAndCol = Math.min(cRow,cCol);
+		int exitCondition = (minOfRowAndCol%2 == 0) ? minOfRowAndCol/2 : (minOfRowAndCol/2)+1;
+		if(loopCounter == exitCondition)
+			return result;
+
+		//step forward
+		for (int i = loopCounter; i <cCol-loopCounter; i++){
+			result.add(matrix[loopCounter][i]);
+		}
+
+		//step down
+		for (int i = loopCounter+1; i <cRow-loopCounter; i++){
+			result.add(matrix[i][cCol - loopCounter - 1]);
+		}
+
+		//step backward
+		for (int i = cCol-loopCounter-2; i >=loopCounter && loopCounter+1<cRow-loopCounter; i--){
+			result.add(matrix[cRow - loopCounter - 1][i]);
+		}
+
+		//step up
+		for (int i = cRow - loopCounter- 2; i > loopCounter && cCol-loopCounter-2>=loopCounter; i--){
+			result.add(matrix[i][loopCounter]);
+		}
+
+		loopCounter++;
+		return spiralOrderWithRecursion(result, matrix, loopCounter);
+	}
+
+	/**
+	 * @category: LeetCode
+	 * @apiNote: Given an m x n matrix, return all elements of the matrix in spiral order.
+	 * @implNote time complexity; O(n)
+	 */
 	public List<Integer> spiralOrder(int[][] matrix) {
 		int cRow = matrix.length;
 		int cCol = matrix[0].length;
@@ -47,7 +88,7 @@ public class Solution {
 	 * @category: LeetCode
 	 * @apiNote:  Complete the function isBalanced in the editor below. It must return a string: YES if the sequence is balanced or NO if it is not.
 	 * @implNote time complexity; O(n) under assumption that HashMap.containsKey method has complexity of O(1)
-	 * @see Javascript implementation below
+	 * @see 'Javascript' implementation below
 	 * function twoSum(inputArray, target) {
 	 *     var tempArray = [];
 	 *
