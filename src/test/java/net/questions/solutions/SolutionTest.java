@@ -1,12 +1,8 @@
 package net.questions.solutions;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInfo;
-import org.junit.jupiter.api.TestReporter;
+import org.junit.jupiter.api.*;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -287,6 +283,63 @@ class SolutionTest {
 				,() -> assertIterableEquals(solution.spiralOrderWithRecursion(inp6), out6)
 				,() -> assertIterableEquals(solution.spiralOrderWithRecursion(inp7), out7)
 				,() -> assertIterableEquals(solution.spiralOrderWithRecursion(inp8), out8)
+		);
+	}
+
+	@Test
+	@DisplayName("Add Two Numbers")
+	@Tag("LeetCode")
+	void testAddTwoNumbers() {
+		ListNode l10 = new ListNode(2);
+		ListNode l11 = new ListNode(4);l10.next = l11;
+		ListNode l12 = new ListNode(3);l11.next = l12;
+
+		ListNode l20 = new ListNode(5);
+		ListNode l21 = new ListNode(6);l20.next = l21;
+		ListNode l22 = new ListNode(4);l21.next = l22;
+
+		ListNode l30 = new ListNode(9);
+		ListNode l31 = new ListNode(9);l30.next = l31;
+		ListNode l32 = new ListNode(9);l31.next = l32;
+		ListNode l33 = new ListNode(9);l32.next = l33;
+
+		ListNode l40 = new ListNode(9);
+		ListNode l41 = new ListNode(9);l40.next = l41;
+
+		ListNode l50 = new ListNode(9);
+		ListNode l51 = new ListNode(8);l50.next = l51;
+
+		ListNode l60 = new ListNode(1);
+
+		assertAll(
+				() -> assertEquals(solution.addTwoNumbers(l10,l20).toString(),"708")
+				,() -> assertEquals(solution.addTwoNumbers(l11,l20).toString(),"994")
+				,() -> assertEquals(solution.addTwoNumbers(l12,l20).toString(),"864")
+				,() -> assertEquals(solution.addTwoNumbers(l12,l20).toString(),"864")
+				,() -> assertEquals(solution.addTwoNumbers(l12,l22).toString(),"7")
+				,() -> assertEquals(solution.addTwoNumbers(l30,l40).toString(),"89001")
+				,() -> assertEquals(solution.addTwoNumbers(l32,l40).toString(),"891")
+		,() -> assertEquals(solution.addTwoNumbers(l50,l60).toString(),"09")
+		);
+	}
+
+	@Test
+	@DisplayName("Two Sum")
+	@Tag("LeetCode")
+	void testLetterCombinations() {
+		List<String>  _483 = Stream.of("gtd","gte","gtf","gud","gue","guf","gvd","gve","gvf"
+				,"htd","hte","htf","hud","hue","huf","hvd","hve","hvf"
+				,"itd","ite","itf","iud","iue","iuf","ivd","ive","ivf").collect(Collectors.toList());
+
+		List<String>  _488 = Stream.of("gtt","gtu","gtv","gut","guu","guv","gvt","gvu","gvv"
+				,"htt","htu","htv","hut","huu","huv","hvt","hvu","hvv"
+				,"itt","itu","itv","iut","iuu","iuv","ivt","ivu","ivv").collect(Collectors.toList());
+
+		assertAll(
+//				() -> assertIterableEquals(solution.letterCombinations("483"),_483)
+//				,() -> assertIterableEquals(solution.letterCombinations("488"),_488)
+//				,
+				() -> assertIterableEquals(solution.letterCombinations(""),new ArrayList<>())
 		);
 	}
 }

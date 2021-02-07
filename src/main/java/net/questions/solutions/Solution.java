@@ -3,6 +3,77 @@ package net.questions.solutions;
 import java.util.*;
 
 public class Solution {
+
+	/**
+	 * @category: LeetCode
+	 * @apiNote: Given a string containing digits from 2-9 inclusive, return all possible letter combinations that the number could represent. Return the answer in any order.
+	 * @implNote time complexity; O(4^n) : a digit can map with 4 letter (for loop)
+	 */
+	public List<String> letterCombinations(String digits) {
+		List<String> result = new ArrayList<>();
+		if (digits == null || digits.length()==0)
+			return result;
+
+		Queue<String> queue = new LinkedList<>();
+		String[] digitLetterMatches = new String[]{" ", "+","abc","def","ghi","jkl","mno","pqrs","tuv","wxyz"};
+
+		queue.add("");
+		int[] digitArr = digits.chars().map(p-> p - '0').toArray();
+
+		while(!queue.isEmpty()){
+			String s = queue.remove();
+
+			if(s.length() == digitArr.length){
+				result.add(s);
+			}else {
+				digitLetterMatches[digitArr[s.length()]]
+						.chars()
+						.forEach(l->queue.add(s+Character.toString(l)));
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * @category: LeetCode
+	 * @apiNote: Add Two Numbers. You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order, and each of their nodes contains a single digit. Add the two numbers and return the sum as a linked list.
+	 *
+	 * You may assume the two numbers do not contain any leading zero, except the number 0 itself.
+	 * @implNote time complexity; O(n)
+	 */
+	public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+		ListNode result = new ListNode((l1.val + l2.val)%10);
+		int carry = l1.val + l2.val >= 10 ? 1:0;
+		ListNode temp = result;
+
+	  	while (l1.next != null && l2.next!= null){
+			l1 = l1.next;
+			l2 = l2.next;
+	  		temp.next = new ListNode((l1.val + l2.val + carry)%10);
+			carry = l1.val + l2.val + carry >= 10 ? 1:0;
+			temp = temp.next;
+		}
+
+		while (l1.next != null){
+			l1 = l1.next;
+			temp.next = new ListNode((l1.val + carry)%10);
+			carry = l1.val + carry >= 10 ? 1:0;
+			temp = temp.next;
+		}
+
+		while (l2.next != null){
+			l2 = l2.next;
+			temp.next = new ListNode((l2.val + carry)%10);
+			carry = l2.val + carry >= 10 ? 1:0;
+			temp = temp.next;
+		}
+
+		if(carry>0)
+			temp.next = new ListNode(carry);
+
+	  	return result;
+	}
+
 	/**
 	 * @category: LeetCode
 	 * @apiNote: Given an m x n matrix, return all elements of the matrix in spiral order.
