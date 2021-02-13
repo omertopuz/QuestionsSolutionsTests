@@ -1,8 +1,235 @@
 package net.questions.solutions;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Solution {
+	/**
+	 * @category: hackerrank
+	 * @apiNote: Start with an infinite two dimensional grid filled with zeros, indexed from (1,1) at bottom left corner with coordinates increasing towards the top and right. Given a series of coordinates (r,c) where r is the ending row and c is the ending column, add 1 to each element in the range from (1,1) to (r,c) inclusive. Once all coordinates are processed, determine how many cells contain the maximal value in the grid.
+	 * @implNote time complexity;
+	 */
+	public long countMax(List<String> upRight) {
+		int minRow = Integer.MAX_VALUE;
+		int minCol = Integer.MAX_VALUE;
+		for (String s: upRight) {
+			String[] coordinates = s.split(" ");
+			int row = Integer.parseInt(coordinates[0]);
+			int col = Integer.parseInt(coordinates[1]);
+			if (row < minRow)
+				minRow = row;
+			if (col < minCol)
+				minCol = col;
+		}
+		return minRow * minCol;
+	}
+
+
+	/**
+	 * @category: Hackerrank
+	 * @apiNote: Given a graph of friends who have different interests, determine which
+	 * groups of friends have the most interests in common. Then use a little
+	 * math to determine a value to return.
+	 * The graph will be represented as a series of nodes numbered
+	 * consecutively from 1 to friends_nodes. Friendships have evolved based
+	 * on interests which will be represented as weights in the graph. Any
+	 * members who share the same interest are said to be connected by that
+	 * interest. Once the node pairs with the maximum number of shared
+	 * interests are determined, multiply the friends_nodes of the resulting
+	 * node pairs and return the maximal product.
+	 * @implNote time complexity: ?;
+	 */
+	public int maxShared(int friendsNodes, List<Integer> friendsFrom, List<Integer> friendsTo, List<Integer> friendsWeight) {
+		Map<Integer, Set<Integer>> weightNodeMap = new HashMap<>();
+		for (int i = 0; i < friendsWeight.size(); i++) {
+			int p = friendsWeight.get(i);
+			if(weightNodeMap.containsKey(p)){
+				Set<Integer> temp = weightNodeMap.get(p);
+				temp.add(friendsFrom.get(i));
+				temp.add(friendsTo.get(i));
+				weightNodeMap.put(p,temp);
+			}else {
+				weightNodeMap.put(p, Stream.of(friendsFrom.get(i),friendsTo.get(i)).collect(Collectors.toSet()));
+			}
+		}
+
+		//build up all pairs
+		Map<List<Integer>, Integer> pairCounts = new HashMap<>();
+		weightNodeMap.values().forEach(v->{
+			List<List<Integer>> combinations = calculateCombinatorialNR(v.size(),2);
+			List<Integer> vList = v.stream().collect(Collectors.toList());
+			combinations.forEach(c->{
+				List<Integer> p = Arrays.asList(vList.get(c.get(0)),vList.get(c.get(1)));
+				if (pairCounts.containsKey(p)){
+					Integer i = pairCounts.get(p);
+					pairCounts.put(p,++i);
+				}else {
+					pairCounts.put(p,1);
+				}
+			});
+		});
+
+
+		int maxValueInPairCounts=(Collections.max(pairCounts.values()));
+		List<Integer> rates = pairCounts.entrySet().stream()
+				.filter(e->e.getValue() == maxValueInPairCounts)
+				.map(p->p.getKey().get(0) * p.getKey().get(1))
+				.sorted(Collections.reverseOrder()).collect(Collectors.toList());
+
+		return rates.get(0);
+	}
+
+
+	/**
+	 * @category: Unknown
+	 * @apiNote: Generate all possible subset of size r of the given array with distinct elements.
+	 * @implNote time complexity; O(c(n,r))
+	 */
+	public List<List<Integer>> calculateCombinatorialNR(int n, int r) {
+		List<List<Integer>> combinations = new ArrayList<>();
+		combinatorialHelper(combinations, new int[r], 0, n-1, 0);
+		return combinations;
+	}
+
+	private void combinatorialHelper(List<List<Integer>> combinations, int data[], int start, int end, int index) {
+		if (index == data.length) {
+			combinations.add(Arrays.stream(data).boxed().collect(Collectors.toList()));
+		} else if (start <= end) {
+			data[index] = start;
+			combinatorialHelper(combinations, data, start + 1, end, index + 1);
+			combinatorialHelper(combinations, data, start + 1, end, index);
+		}
+	}
+
+	/**
+	 * @category: hackerrank
+	 * @apiNote: Find the number of strings of a given length that can be formed under the following rules:
+	 * Each letter is a vowel, that is, it is in the set {a, e, i, o, u}.
+	 * The letter a may only be followed by the letter e.
+	 * An e may only be followed by an a or an i.
+	 * An i may not be next to another i.
+	 * The letter o may only be followed by an i or a u.
+	 * The letter u may only be followed by an a.
+	 * @implNote time complexity;
+	 */
+	static int modulo = 1000000007;
+	public int countPerms(int n){
+		char[] vowels = new char[]{'a','e','i','o','u'};
+		int count = buildAllNLengthString(vowels, "", n,0);
+		return count;
+	}
+
+	private int buildAllNLengthString(char[] set, String prefix, int k,int counter){
+		if (k == 0){
+			if(rulesValid(prefix.toCharArray())){
+				counter++;
+				if (counter>modulo)
+					counter= counter % modulo;
+			}
+			return counter;
+		}
+
+		for (int i = 0; i < set.length; ++i){
+			String newPrefix = prefix + set[i];
+			counter = buildAllNLengthString(set, newPrefix,k - 1,counter);
+		}
+		return counter;
+	}
+
+	/*
+	* Each letter is a vowel, that is, it is in the set {a, e, i, o, u}.
+The letter a may only be followed by the letter e.
+An e may only be followed by an a or an i.
+An i may not be next to another i.
+The letter o may only be followed by an i or a u.
+The letter u may only be followed by an a.
+	* */
+	private static boolean rulesValid(char[] sCharArray) {
+		for (int i = 0; i < sCharArray.length-1; i++) {
+			if (!((sCharArray[i] == 'a' && sCharArray[i+1] == 'e')
+			|| (sCharArray[i] == 'e' && (sCharArray[i+1] == 'a' || sCharArray[i+1] == 'i'))
+			|| (sCharArray[i] == 'i' && sCharArray[i+1] != 'i')
+			|| (sCharArray[i] == 'o' && (sCharArray[i+1] == 'i' || sCharArray[i+1] == 'u'))
+			|| (sCharArray[i] == 'u' && sCharArray[i+1] == 'a')))
+				return false;
+		}
+		return true;
+	}
+
+
+	/**
+	 * @category: LeetCode
+	 * @apiNote: Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.
+	 * @implNote time complexity; O(n 2^(n-1))
+	 */
+//	public List<String> generateParenthesis(int n) {
+//		int iterationCount = 2;
+//		List<String> result = new ArrayList<>();
+//		for (int i = 1; i <iterationCount ; i++) {
+//			String bitString = Integer.toBinaryString(i);
+//			bitString = bitString.substring(bitString.length() - 2*n);
+//			if (i <= n)
+//				iterationCount *=2;
+//			if (isWellFormedParenthesis(bitString))
+//				result.add(bitString);
+//		}
+//		return result;
+//	}
+//
+//	private boolean isWellFormedParenthesis(String bitString) {
+//		return false;
+//	}
+
+	/**
+	 * @category: LeetCode
+	 * @apiNote: Given the head of a linked list, remove the nth node from the end of the list, in one pass and return its head.
+	 * @implNote time complexity; O(n), n: size of linkedlist
+	 */
+	public ListNode removeNthFromEnd(ListNode head, int n) {
+		ListNode slow = head;
+		ListNode fast = head;
+		int c_nodes = 1;
+
+		while (slow != null){
+
+			if (fast!=null){
+				fast = fast.next;
+				if (fast!=null){
+					c_nodes++;
+					slow = slow.next;
+					fast = fast.next;
+					if (fast!=null)
+						c_nodes++;
+				}
+
+			}else {
+				if(c_nodes - n == 0)
+					return head.next;
+
+				int middlePoint = (c_nodes / 2)+1;
+				if (c_nodes - n > middlePoint){
+					while (middlePoint != c_nodes - n){
+						middlePoint++;
+						slow = slow.next;
+					}
+				}else {
+					slow = head;
+					for (int i = 1; i < c_nodes - n; i++) {
+						slow = slow.next;
+					}
+				}
+
+				if (slow.next != null)
+					slow.next = slow.next.next;
+
+				break;
+			}
+
+		}
+
+		return head;
+	}
 
 	/**
 	 * @category: LeetCode

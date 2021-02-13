@@ -2,8 +2,8 @@ package net.questions.solutions;
 
 import org.junit.jupiter.api.*;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -336,10 +336,106 @@ class SolutionTest {
 				,"itt","itu","itv","iut","iuu","iuv","ivt","ivu","ivv").collect(Collectors.toList());
 
 		assertAll(
-//				() -> assertIterableEquals(solution.letterCombinations("483"),_483)
-//				,() -> assertIterableEquals(solution.letterCombinations("488"),_488)
-//				,
-				() -> assertIterableEquals(solution.letterCombinations(""),new ArrayList<>())
+				() -> assertIterableEquals(solution.letterCombinations("483"),_483)
+				,() -> assertIterableEquals(solution.letterCombinations("488"),_488)
+				, () -> assertIterableEquals(solution.letterCombinations(""),new ArrayList<>())
+		);
+	}
+
+	@Test
+	@DisplayName("Remove Nth Node From End of List")
+	@Tag("LeetCode")
+	void testRemoveNthFromEnd() {
+		ListNode l10 = new ListNode(2);
+		ListNode l11 = new ListNode(4);l10.next = l11;
+		ListNode l12 = new ListNode(3);l11.next = l12;
+		ListNode l13 = new ListNode(7);l12.next = l13;
+		ListNode l14 = new ListNode(3);l13.next = l14;
+		ListNode l15 = new ListNode(9);l14.next = l15;
+		ListNode l16 = new ListNode(4);l15.next = l16;
+
+		assertEquals(solution.removeNthFromEnd(l10,1).toString(),"243739");
+		l15.next = l16;
+		assertEquals(solution.removeNthFromEnd(l11,1).toString(),"43739");
+		l15.next = l16;
+
+		assertEquals(solution.removeNthFromEnd(l10,2).toString(),"243734");
+		l14.next = l15;
+		assertEquals(solution.removeNthFromEnd(l11,2).toString(),"43734");
+		l14.next = l15;
+		assertEquals(solution.removeNthFromEnd(l10,5).toString(),"247394");
+		l11.next = l12;
+		assertEquals(solution.removeNthFromEnd(l11,5).toString(),"47394");
+		l11.next = l12;
+
+		assertEquals(solution.removeNthFromEnd(l11,4).toString(),"43394");
+		l12.next = l13;
+
+		assertEquals(solution.removeNthFromEnd(l11,3).toString(),"43794");
+		l13.next = l14;
+
+		assertEquals(solution.removeNthFromEnd(l11,4).toString(),"43394");
+		l12.next = l13;
+
+		assertEquals(solution.removeNthFromEnd(l15,1).toString(),"9");
+		l15.next = l16;
+
+		assertEquals(solution.removeNthFromEnd(l15,2).toString(),"4");
+		l15.next = l16;
+
+		assertNull(solution.removeNthFromEnd(l16,1));
+
+	}
+
+	@Test
+	@DisplayName("all subsets of given size of a set")
+	@Tag("Unknown")
+	void testCalculateCombinatorialNR() {
+		assertAll(
+				() -> assertIterableEquals(solution.calculateCombinatorialNR(3,2),
+						Arrays.asList(Arrays.stream(new int[]{0,1}).boxed().collect(Collectors.toList())
+								,Arrays.stream(new int[]{0,2}).boxed().collect(Collectors.toList())
+								,Arrays.stream(new int[]{1,2}).boxed().collect(Collectors.toList()))
+
+				)
+		);
+	}
+
+	@Test
+	@DisplayName("Shared Interest")
+	@Tag("hackerrank")
+	void testMaxShared() {
+		assertAll(
+				() -> assertEquals(solution.maxShared(5,
+						Arrays.asList(1,1,2,2,2),
+						Arrays.asList(2,2,3,3,4),
+						Arrays.asList(1,2,1,3,3)),
+						6)
+				,() -> assertEquals(solution.maxShared(5,
+						Arrays.asList(1, 1, 2, 2, 2),
+						Arrays.asList(2, 2, 3, 3, 4),
+						Arrays.asList(2, 3, 1, 3, 4)),
+						6)
+		);
+	}
+
+	@Test
+	@DisplayName("Count String Permutations")
+	@Tag("hackerrank")
+	void testCountPerms() {
+		assertAll(
+				() -> assertEquals(solution.countPerms(1), 5)
+				,() -> assertEquals(solution.countPerms(2), 10)
+				,() -> assertEquals(solution.countPerms(3), 19)
+		);
+	}
+
+	@Test
+	@DisplayName("Count Max")
+	@Tag("hackerrank")
+	void testCountMax() {
+		assertAll(
+				() -> assertEquals(solution.countMax(Arrays.asList("1 4","2 3","4 1")), 1)
 		);
 	}
 }
