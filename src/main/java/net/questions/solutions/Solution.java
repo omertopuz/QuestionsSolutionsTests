@@ -6,6 +6,85 @@ import java.util.stream.Stream;
 
 public class Solution {
 	/**
+	 * @category: unknown
+	 * @apiNote: Given a non-negative number represented as an array of digits, add 1 to the number ( increment the number represented by the digits ). The digits are stored such that the most significant digit is first element of array.
+	 * @implNote time complexity; O(n)
+	 */
+	public int[] incrementNumber(int[] arr){
+
+		boolean increaseCapacity = false;
+		int carry = 0;
+		for(int i = arr.length - 1; i>=0; i--){
+			if(arr[i] + carry +1 > 9){
+				carry = 1;
+				arr[i] = 0;
+				if(i ==  0)
+					increaseCapacity = true;
+			}else{
+				arr[i]=carry+1;
+				break;
+			}
+		}
+
+		if(increaseCapacity){
+			int returnArrSize = arr.length+1;
+			int[] result = new int[returnArrSize];
+			result[0] = 1;
+
+			for(int i = 1; i<arr.length; i++){
+				result[i] = arr[i];
+			}
+			return result;
+		}else
+			return arr;
+	}
+
+	/**
+	 * @category: hackerrank
+	 * @apiNote: count all of the substrings that make up a valid command. Each of the valid commands will be in the following format:
+	 * The first letter is a lowercase English letter.
+	 * Next, it contains a sequence of zero or more of the following characters: lowercase English letters, digits, and colons.
+	 * Next, it contains a forward slash '/'.
+	 * Next, it contains a sequence of one or more of the following characters: lowercase English letters and digits.
+	 * Next, it contains a backward slash '\'.
+	 * Next, it contains a sequence of one or more lowercase English letters.
+	 * @implNote time complexity; O(commands.size() * max(commands.length))
+	 */
+	public List<Integer> commandCount(List<String> commands) {
+		List<Integer> result = new ArrayList<>();
+
+		String pattern = "^([a-z])([a-z0-9+:]*)/([a-z0-9]*)\\\\([a-z]*)";
+
+		for (String cmd: commands) {
+			if (cmd.matches(pattern+".*")){
+				int counter = 0;
+				String[] backSlashParts = cmd.split("\\\\");
+				for (int i = 0; i < backSlashParts.length; i++) {
+					String partialCmd = backSlashParts[i]+"\\";
+					if(i < backSlashParts.length-1){
+						if (backSlashParts[i+1].contains("/"))
+							partialCmd+=backSlashParts[i+1].substring(0, partialCmd.indexOf('/')+1);
+						else
+							partialCmd+=backSlashParts[i+1];
+					}
+					if(partialCmd.matches(pattern+".*")){
+						counter +=(int)partialCmd.substring(0,partialCmd.indexOf('/')+1)
+								.chars().filter(c->c>='a' && c<='z').count() *
+								(int)partialCmd.substring(partialCmd.indexOf('\\')+1,partialCmd.length())
+								.chars().filter(c->c>='a' && c<='z').count();
+					}
+				}
+				result.add(counter);
+			}
+			else {
+				result.add(0);
+			}
+		}
+
+		return result;
+	}
+
+	/**
 	 * @category: hackerrank
 	 * @apiNote: Start with an infinite two dimensional grid filled with zeros, indexed from (1,1) at bottom left corner with coordinates increasing towards the top and right. Given a series of coordinates (r,c) where r is the ending row and c is the ending column, add 1 to each element in the range from (1,1) to (r,c) inclusive. Once all coordinates are processed, determine how many cells contain the maximal value in the grid.
 	 * @implNote time complexity;
@@ -475,11 +554,6 @@ The letter u may only be followed by an a.
 
 		return unMatchedBracketCount == 0 ? "YES":"NO";
 	}
-
-//	private String isBalanced(char[] bracketArray, int position){
-//		if ()
-//		isBalanced(bracketArray,++position);
-//	}
 
 	/**
 	 * @category: Cracking The Coding Interview

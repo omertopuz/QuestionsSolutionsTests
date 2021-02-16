@@ -438,4 +438,26 @@ class SolutionTest {
 				() -> assertEquals(solution.countMax(Arrays.asList("1 4","2 3","4 1")), 1)
 		);
 	}
+
+	@Test
+	@DisplayName("Dangerous Script")
+	@Tag("hackerrank")
+	void testCommandCount() {
+		assertAll(
+				() -> assertIterableEquals(solution.commandCount(
+						Arrays.asList("w\\//a/b", "w\\//a\b", "w\\/a\b", "w:://a\b", "w::/a\\b", "w:/a\\bc::/12\\xyz")),
+						Arrays.asList(0 ,0 ,0 ,0 ,1, 8)
+				)
+		);
+	}
+
+	@Test
+	@DisplayName("Adding one to number represented as array of digits")
+	@Tag("Unknown")
+	void testIncrementNumber() {
+		assertAll(
+				() -> assertArrayEquals(solution.incrementNumber(new int[] {1,0,1,9}),new int[]{1,0,2,0})
+				,() -> assertArrayEquals(solution.incrementNumber(new int[] {9,9,9}),new int[]{1,0,0,0})
+		);
+	}
 }
