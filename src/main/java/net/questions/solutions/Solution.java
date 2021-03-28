@@ -5,6 +5,238 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Solution {
+
+	/**
+	 * @category: Unknown
+	 * @apiNote: There are N blocks, numbered from 0 to N-1, arranged in a row. A couple of frogs were sitting together on one block when they had a terrible quarrel. Now they want to jump away from one another so that the distance between them will be as large as possible. The distance between blocks numbered J and K, where J ≤ K, is computed as K − J + 1. The frogs can only jump up, meaning that they can move from one block to another only if the two blocks are adjacent and the second block is of the same or greater height as the first. What is the longest distance that they can possibly create between each other, if they also chose to sit on the optimal starting block initially?
+	 * @implNote time complexity; O(n)
+	 */
+	public static int jumpingFrogs(int[] blocks) {
+		int result = Integer.MIN_VALUE;
+		for (int i = 0; i < blocks.length-1; i++) {
+			if (blocks[i] < blocks[i+1]){
+
+				if (i == 0){
+					int targetIndex = i;
+					while (targetIndex < blocks.length -1 &&
+							blocks[targetIndex] <= blocks[targetIndex+1])
+						targetIndex++;
+					if (targetIndex + 1 >result)
+						result = targetIndex+1;
+				}else {
+					int forwardIndex = i;
+					int backwardIndex = i;
+					while (forwardIndex < blocks.length-1 &&
+							blocks[forwardIndex] <= blocks[forwardIndex+1])
+						forwardIndex++;
+					while (backwardIndex>0 &&
+							blocks[backwardIndex] <= blocks[backwardIndex-1])
+						backwardIndex--;
+					if (forwardIndex - backwardIndex + 1 >result)
+						result = forwardIndex - backwardIndex + 1 ;
+				}
+			}
+
+		}
+
+		if(result == Integer.MIN_VALUE)
+			result = 2;
+
+		return result;
+	}
+
+	/**
+	 * @category: Unknown
+	 * @apiNote: given an array A consisting of N integers, returns the maximum sum of two numbers whose digits add up to an equal sum. If there are no two numbers whose digits have an equal sum, the function should return -1
+	 * @implNote time complexity; O(n)
+	 */
+	public int maxSumTuples(int[] A) {
+
+		long maxSum = Long.MIN_VALUE;
+		int[] digitSums = new int[A.length];
+		for (int i = 0; i < A.length; i++) {
+			digitSums[i] = getSum(A[i]);
+		}
+
+		for (int i = 0; i < A.length; i++) {
+			for (int j = i+1; j < A.length; j++) {
+				if(digitSums[i] == digitSums[j] && A[i] + A[j] > maxSum)
+					maxSum = A[i] + A[j];
+			}
+		}
+
+		if (maxSum == Long.MIN_VALUE)
+			return -1;
+		else
+			return (int)maxSum;
+	}
+
+	private int getSum(int n){
+		int sum = 0;
+		while (n != 0) {
+			sum = sum + n % 10;
+			n = n / 10;
+		}
+		return sum;
+	}
+
+	/**
+	 * @category: Unknown
+	 * @apiNote: replace all of the question marks with letters (one letter per question mark) in such a way that no letter appears next to another letter of the same kind.
+	 * @implNote time complexity; O(n)
+	 */
+	public String replaceQuestionMarksRandom(String riddle) {
+		char[] rChars = riddle.toCharArray();
+		for (int i = 0; i < rChars.length; i++) {
+			if (rChars[i] == '?'){
+				if (i == 0)
+					rChars[i] = 'a';
+				else {
+					if(i<riddle.length()-1){
+						rChars[i] = getRandomChar(rChars[i-1],rChars[i+1]);
+					}else {
+						rChars[i] = getRandomChar(rChars[i-1],'z');
+					}
+				}
+			}
+		}
+
+		return new String(rChars);
+	}
+
+	private char getRandomChar(char c1, char c2){
+		Random random = new Random();
+		int max = 'z';
+		int min = 'a';
+		int rand = 0;
+		do {
+			rand = random.nextInt(max - min + 1) + min;
+		}while (c1 == rand || c2 == rand);
+		return (char) rand;
+	}
+
+	/**
+	 * @category: LeetCode
+	 * @apiNote: The string "PAYPALISHIRING" is written in a zigzag pattern on a given number of rows like this: (you may want to display this pattern in a fixed font for better legibility)
+	 * @implNote time complexity; O(n)
+	 */
+	public String convert(String s, int numRows) {
+		if (numRows == 1) return s;
+		int sLength=0;
+		String[] rows = new String[numRows];
+		for (int i = 0; i < rows.length; i++) {
+			rows[i] = "";
+		}
+
+		while (sLength<s.length()){
+			for (int i = 0; sLength<s.length() && i < numRows; i++) {
+				rows[i] += s.charAt(sLength++);
+			}
+			for (int i = numRows-2; sLength<s.length() && i > 0; i--) {
+				rows[i] +=s.charAt(sLength++);
+			}
+		}
+
+		return Arrays.stream(rows).reduce((a,b)->a+b).get();
+	}
+
+	/**
+	 * @category: LeetCode
+	 * @apiNote: Merge two sorted linked lists and return it as a sorted list. The list should be made by splicing together the nodes of the first two lists.
+	 * @implNote time complexity; O(n)
+	 */
+	public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+		ListNode temp1 = l1;
+		ListNode temp2 = l2;
+		ListNode temp = null;
+		ListNode head = null;
+
+		while (temp1 != null && temp2 != null){
+			while (temp1 != null && temp2 != null && temp1.val <= temp2.val){
+				ListNode new_node = new ListNode(temp1.val);
+				if (head == null){
+					head = new_node;
+					temp = new_node;
+				}else {
+					temp.next = new_node;
+					temp = temp.next;
+				}
+				temp1 = temp1.next;
+			}
+
+			while (temp2 != null && temp1!= null && temp2.val <= temp1.val){
+				ListNode new_node = new ListNode(temp2.val);
+				if (head == null){
+					head = new_node;
+					temp = new_node;
+				}else {
+					temp.next = new_node;
+					temp = temp.next;
+				}
+				temp2 = temp2.next;
+			}
+		}
+
+		while (temp1 != null){
+			ListNode new_node = new ListNode(temp1.val);
+			if (head == null){
+				head = new_node;
+				temp = new_node;
+			}else {
+				temp.next = new_node;
+				temp = temp.next;
+			}
+			temp1 = temp1.next;
+		}
+		while (temp2 != null){
+			ListNode new_node = new ListNode(temp2.val);
+			if (head == null){
+				head = new_node;
+				temp = new_node;
+			}else {
+				temp.next = new_node;
+				temp = temp.next;
+			}
+			temp2 = temp2.next;
+		}
+
+		return head;
+	}
+
+	/**
+	 * @category: unknown
+	 * @apiNote: reverse a linked list.
+	 * @implNote time complexity; O(n)
+	 */
+	public ListNode reverseLinkedList2(ListNode head){
+		if (head == null || head.next == null)
+			return head;
+
+		ListNode next = null;
+		ListNode previous = null;
+		ListNode current = head;
+
+		while (current != null){
+			next = current.next;
+			current.next = previous;
+			previous = current;
+			current = next;
+		}
+
+		return previous;
+	}
+
+	public ListNode reverseLinkedList (ListNode head){
+		if (head == null || head.next == null)
+			return head;
+
+		ListNode response = reverseLinkedList(head.next);
+		head.next.next = head;
+		head.next = null;
+
+		return response;
+	}
+
 	/**
 	 * @category: unknown
 	 * @apiNote: Given a non-negative number represented as an array of digits, add 1 to the number ( increment the number represented by the digits ). The digits are stored such that the most significant digit is first element of array.

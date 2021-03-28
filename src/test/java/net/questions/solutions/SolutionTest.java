@@ -460,4 +460,83 @@ class SolutionTest {
 				,() -> assertArrayEquals(solution.incrementNumber(new int[] {9,9,9}),new int[]{1,0,0,0})
 		);
 	}
+
+	@Test
+	@DisplayName("Reverse LinkedList")
+	@Tag("Unknown")
+	void testReverseLinkedList() {
+		ListNode l10 = new ListNode(2);
+		ListNode l11 = new ListNode(4);l10.next = l11;
+		ListNode l12 = new ListNode(3);l11.next = l12;
+
+		assertAll(
+				() -> assertEquals(solution.reverseLinkedList2(l10).toString(),"342")
+		);
+	}
+
+	@Test
+	@DisplayName("Merge Two Sorted Lists")
+	@Tag("LeetCode")
+	void testMergeTwoLists() {
+		ListNode l10 = new ListNode(3);
+		ListNode l11 = new ListNode(9);l10.next = l11;
+		ListNode l12 = new ListNode(10);l11.next = l12;
+		ListNode l13 = new ListNode(17);l12.next = l13;
+		ListNode l14 = new ListNode(35);l13.next = l14;
+
+		ListNode l20 = new ListNode(5);
+		ListNode l21 = new ListNode(6);l20.next = l21;
+		ListNode l22 = new ListNode(7);l21.next = l22;
+		ListNode l23 = new ListNode(41);l22.next = l23;
+
+		assertAll(
+				() -> assertEquals(solution.mergeTwoLists(l10,l20).toString(),"35679101735")
+				,() -> assertEquals(solution.mergeTwoLists(l11,l20).toString(),"567910173541")
+		);
+	}
+
+	@Test
+	@DisplayName("Jumping frogs")
+	@Tag("LeetCode")
+	void testConvert() {
+		assertAll(
+				() -> assertEquals(solution.convert("PAYPALISHIRING",3),"PAHNAPLSIIGYIR")
+				,() -> assertEquals(solution.convert("PAYPALISHIRING",4),"PINALSIGYAHRPI")
+				,() -> assertEquals(solution.convert("PAYPA",4),"PAYAP")
+				,() -> assertEquals(solution.convert("P",1),"P")
+		);
+	}
+
+	@Test
+	@DisplayName("Jumping frogs")
+	@Tag("Unknown")
+	void testJumpingFrogs() {
+		assertAll(
+				() -> assertEquals(solution.jumpingFrogs(new int[]{2, 6, 8, 5}),4)
+				,() -> assertEquals(solution.jumpingFrogs(new int[]{1, 5, 5, 2, 6}),4)
+				,() -> assertEquals(solution.jumpingFrogs(new int[]{1, 1}),2)
+		);
+	}
+
+	@Test
+	@DisplayName("Max sum of tuples")
+	@Tag("Unknown")
+	void testMaxSumTuples() {
+		assertAll(
+				() -> assertEquals(solution.maxSumTuples(new int[]{51, 71, 17, 42}),93)
+				,() -> assertEquals(solution.maxSumTuples(new int[]{42, 33, 60}),102)
+				,() -> assertEquals(solution.maxSumTuples(new int[]{51, 32, 43}),-1)
+		);
+	}
+
+	@Test
+	@DisplayName("Replace question marks")
+	@Tag("Unknown")
+	void testReplaceQuestionMarksRandom() {
+		assertAll(
+				() -> assertEquals(solution.replaceQuestionMarksRandom("ab?ac?"),"")
+				,() -> assertEquals(solution.replaceQuestionMarksRandom("rd?e?wg??"),"")
+				,() -> assertEquals(solution.replaceQuestionMarksRandom("????????"),"")
+		);
+	}
 }
