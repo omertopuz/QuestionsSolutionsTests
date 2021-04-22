@@ -539,4 +539,21 @@ class SolutionTest {
 				,() -> assertEquals(solution.replaceQuestionMarksRandom("????????"),"")
 		);
 	}
+
+	@Test
+	@DisplayName("Integer Break")
+	@Tag("Leetcode")
+	void testIntegerBreak() {
+		assertAll(
+				() -> assertEquals(solution.integerBreak(2),1)
+				,() -> assertEquals(solution.integerBreak(3),2)
+				,() -> assertEquals(solution.integerBreak(4),4)
+
+		,() -> assertEquals(solution.integerBreak(58),1549681956)
+
+				,() -> assertEquals(solution.integerBreak(12),81)
+				,() -> assertEquals(solution.integerBreak(13),108)
+				,() -> assertEquals(solution.integerBreak(14),162)
+		);
+	}
 }

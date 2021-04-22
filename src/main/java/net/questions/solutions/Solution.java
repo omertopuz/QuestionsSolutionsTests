@@ -2,14 +2,38 @@ package net.questions.solutions;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class Solution {
 
 	/**
+	 * @category: Leetcode
+	 * @apiNote: Given an integer n, break it into the sum of k positive integers, where k >= 2, and maximize the product of those integers.
+	 * Return the maximum product you can get.
+	 * @implNote time complexity; O(n/3) = O(n)
+	 */
+	public int integerBreak(int n) {
+		if(n==2)
+			return 1;
+		if(n== 3)
+			return 2;
+
+		int base = IntStream.range(1,n/3).reduce(1, (product, i) -> product * 3);
+
+		if(n % 3 == 0){	//n is splitted as 3+3k, so the multiplication 3 * 3^k
+			return 3*base;
+		}else if(n % 3 == 1){	//n is splitted as 4+3k, so the multiplication 4 * 3^k
+			return 4*base;
+		}else {	//n is splitted as 2+3+3k, so the multiplication 2* 3 * 3^k
+			return 2*3*base;
+		}
+	}
+
+	/**
 	 * @category: Unknown
 	 * @apiNote: There are N blocks, numbered from 0 to N-1, arranged in a row. A couple of frogs were sitting together on one block when they had a terrible quarrel. Now they want to jump away from one another so that the distance between them will be as large as possible. The distance between blocks numbered J and K, where J ≤ K, is computed as K − J + 1. The frogs can only jump up, meaning that they can move from one block to another only if the two blocks are adjacent and the second block is of the same or greater height as the first. What is the longest distance that they can possibly create between each other, if they also chose to sit on the optimal starting block initially?
-	 * @implNote time complexity; O(n)
+	 * @implNote time complexity;
 	 */
 	public static int jumpingFrogs(int[] blocks) {
 		int result = Integer.MIN_VALUE;
@@ -48,7 +72,7 @@ public class Solution {
 	/**
 	 * @category: Unknown
 	 * @apiNote: given an array A consisting of N integers, returns the maximum sum of two numbers whose digits add up to an equal sum. If there are no two numbers whose digits have an equal sum, the function should return -1
-	 * @implNote time complexity; O(n)
+	 * @implNote time complexity;
 	 */
 	public int maxSumTuples(int[] A) {
 
@@ -118,7 +142,7 @@ public class Solution {
 	/**
 	 * @category: LeetCode
 	 * @apiNote: The string "PAYPALISHIRING" is written in a zigzag pattern on a given number of rows like this: (you may want to display this pattern in a fixed font for better legibility)
-	 * @implNote time complexity; O(n)
+	 * @implNote time complexity; O(s.length * numRows)
 	 */
 	public String convert(String s, int numRows) {
 		if (numRows == 1) return s;
