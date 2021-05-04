@@ -9,6 +9,31 @@ public class Solution {
 
 	/**
 	 * @category: Leetcode
+	 * @apiNote: You are given an integer array coins representing coins of different denominations and an integer amount representing a total amount of money.
+	 * Return the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by any combination of the coins, return -1
+	 * @implNote time complexity; O(coins.length * amount)
+	 * space complexity: O(amount)
+	 */
+	public int coinChange(int[] coins, int amount) {
+		if(amount == 0)
+			return 0;
+
+		int INF = Integer.MAX_VALUE - 1 ;
+		long[] minCoins = new long[amount+1];
+		Arrays.fill(minCoins,INF);
+		minCoins[0] = 0;
+		for (int j = 0; j < coins.length; j++) {
+			for(int i = 0; i <= amount; i++) {
+				if(i >= coins[j])
+					minCoins[i] = Math.min(minCoins[i], minCoins[i - coins[j]] + 1);
+			}
+		}
+
+		return (int) (minCoins[amount] != INF ? minCoins[amount] : -1);
+	}
+
+	/**
+	 * @category: Leetcode
 	 * @apiNote: Given an integer n, break it into the sum of k positive integers, where k >= 2, and maximize the product of those integers.
 	 * Return the maximum product you can get.
 	 * @implNote time complexity; O(n/3) = O(n)
@@ -809,6 +834,44 @@ The letter u may only be followed by an a.
 		}
 
 		return unMatchedBracketCount == 0 ? "YES":"NO";
+	}
+
+	public boolean isBalancedWithStack(String s) {
+		Deque<Character> stack = new ArrayDeque<>();
+
+		for (int i = 0; i < s.length(); i++) {
+			char x = s.charAt(i);
+
+			if (x == '(' || x == '[' || x == '{'){
+				stack.push(x);
+				continue;
+			}
+
+			if (stack.isEmpty())
+				return false;
+			char check;
+			switch (x) {
+				case ')':
+					check = stack.pop();
+					if (check == '{' || check == '[')
+						return false;
+					break;
+
+				case '}':
+					check = stack.pop();
+					if (check == '(' || check == '[')
+						return false;
+					break;
+
+				case ']':
+					check = stack.pop();
+					if (check == '(' || check == '{')
+						return false;
+					break;
+			}
+		}
+
+		return stack.isEmpty();
 	}
 
 	/**

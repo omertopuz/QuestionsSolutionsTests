@@ -548,12 +548,21 @@ class SolutionTest {
 				() -> assertEquals(solution.integerBreak(2),1)
 				,() -> assertEquals(solution.integerBreak(3),2)
 				,() -> assertEquals(solution.integerBreak(4),4)
-
-		,() -> assertEquals(solution.integerBreak(58),1549681956)
-
+				,() -> assertEquals(solution.integerBreak(58),1549681956)
 				,() -> assertEquals(solution.integerBreak(12),81)
 				,() -> assertEquals(solution.integerBreak(13),108)
 				,() -> assertEquals(solution.integerBreak(14),162)
+		);
+	}
+
+	@Test
+	@DisplayName("Coin Change")
+	@Tag("Leetcode")
+	void testCoinChange() {
+		assertAll(
+				() -> assertEquals(solution.coinChange(new int[]{1,2,5},11),3)
+				,() -> assertEquals(solution.coinChange(new int[]{2,3},7),3)
+				,() -> assertEquals(solution.coinChange(new int[]{3,5,6},7),-1)
 		);
 	}
 }
