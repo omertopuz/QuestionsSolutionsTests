@@ -6,6 +6,47 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class Solution {
+	/**
+	 * @category: Leetcode
+	 * @apiNote: Given an array A of strings made only from lowercase letters, return a list of all characters that show up in all strings within the list (including duplicates).  For example, if a character occurs 3 times in all strings but not 4 times, you need to include that character three times in the final answer.
+	 * @implNote time complexity; O(inp.length)
+	 *
+	 */
+	public List<String> commonChars(String[] A) {
+		int[][] occurences = new int[A.length][26];
+		for (int i = 0; i < A.length; i++) {
+			char[] toChars = A[i].toCharArray();
+			for (int j = 0; j < toChars.length; j++) {
+				occurences[i][toChars[j]-'a']++;
+			}
+		}
+
+		List<String> commonChars = new ArrayList<>();
+		int counter = 0;
+		int commonCharCounter = Integer.MAX_VALUE;
+		for (int i = 0; i < 26; i++) {
+			final int colNo = i;
+			int[] col = IntStream.range(0, occurences.length)
+					.map(j -> occurences[j][colNo]).toArray();
+			for (int j = 0; j < col.length; j++) {
+				if (col[j]>0){
+					counter++;
+				}
+
+				if (col[j]<commonCharCounter)
+					commonCharCounter = col[j];
+			}
+			if (counter>= A.length){
+				for (int j = 0; j < commonCharCounter; j++) {
+					commonChars.add(String.valueOf((char)('a'+colNo)));
+				}
+			}
+			counter = 0;
+			commonCharCounter = Integer.MAX_VALUE;
+		}
+
+		return commonChars;
+	}
 
 	/**
 	 * @category: Leetcode
