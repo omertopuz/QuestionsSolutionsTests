@@ -6,6 +6,487 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class Solution {
+
+	public static int sherlockAndAnagrams(String s) {
+		// Write your code here
+		Map<String,List<String>> anagramsList = new HashMap<>();
+		for (int i = 0; i < s.length() ; i++) {
+			for (int j = 0;  j+i < s.length(); j++) {
+				String key = s.substring(j, j+i + 1);
+				if (anagramsList.containsKey(key)) {
+					List<String> angr = new ArrayList<>(anagramsList.get(key));
+					angr.add(key);
+					anagramsList.put(key,angr);
+				} else {
+					char[] subStr = key.toCharArray();
+					Arrays.sort(subStr);
+					String mapKey = new String(subStr);
+					if(anagramsList.containsKey(mapKey)){
+						List<String> angr = new ArrayList<>(anagramsList.get(mapKey));
+						angr.add(key);
+						anagramsList.put(mapKey,angr);
+					}else {
+						anagramsList.put(mapKey,Arrays.asList(key));
+					}
+				}
+			}
+		}
+		return anagramsList.entrySet().stream().filter(f->f.getValue().size()>1)
+				.map(i->{
+					int size = i.getValue().size();
+					return size * (size-1)/2;
+				})
+				.reduce(0,(a,b)->a+b);
+	}
+
+	public static int maxSubArray(int[] nums) {
+		int len = nums.length;
+		int sum = Arrays.stream(nums).sum();
+		int result = Integer.MIN_VALUE;
+		int leftSum = 0;
+		int rightSum = 0;
+		for(int i = 0; i<len; i++){
+			leftSum+=nums[i];
+			rightSum+=nums[len-1-i];
+			if(sum - leftSum>result)
+				result = sum - leftSum;
+			if(sum - rightSum>result)
+				result = sum - rightSum;
+
+		}
+		return result;
+	}
+
+	/**@implNote: given a string S, find how many character should be deleted to ensure that every character has unique count
+	 * e.g. S:"abcd" return 3, S:"aaaabbbb" return 1
+	 * */
+	public int findHowManyCharShouldBeDeleted(String S) {
+		// write your code in Java SE 8
+		int len = S.length();
+		int[] ocurences = new int[26];
+		for(int i =0;i<len;i++){
+			ocurences[S.charAt(i)-'a']++;
+		}
+
+		int deleteCount = 0;
+		List<Integer> uniqueNumbers = new ArrayList<>();
+
+		ocurences = IntStream.of(ocurences)
+				.boxed()
+				.sorted(Comparator.reverseOrder())
+				.mapToInt(i -> i)
+				.toArray();
+
+		uniqueNumbers.add(ocurences[0]);
+		for(int i =1;i<26;i++){
+			if(ocurences[i] == 0) continue;
+
+			if(uniqueNumbers.contains(ocurences[i])){
+				int last = uniqueNumbers.get(uniqueNumbers.size()-1);
+				if(ocurences[i] > last){
+					deleteCount +=Math.abs(last - ocurences[i] -1);
+					if(ocurences[i] - last-1>0)
+						uniqueNumbers.add(ocurences[i] - last-1);
+
+				}else {
+					deleteCount++;
+					if(ocurences[i]-1>0)
+						uniqueNumbers.add(ocurences[i]-1);
+				}
+			}else{
+				uniqueNumbers.add(ocurences[i]);
+			}
+		}
+
+		return deleteCount;
+	}
+
+	public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+		Arrays.sort(candidates);
+		Set<List<Integer>> set = new HashSet<>();
+		combinationSum2Dfs(0,candidates,target,new ArrayList<>(),set,0);
+		List<List<Integer>> combinations = new ArrayList<>();
+		set.forEach(c->combinations.add(new ArrayList<>(c)));
+		return combinations;
+	}
+
+	public void combinationSum2Dfs(int index,int[] candidates, int target,List<Integer> combinationCandidate,Set<List<Integer>> combinations,int sum) {
+		if (sum==target) {
+			combinations.add(new ArrayList<>(combinationCandidate));
+			return;
+		}
+
+		for (int i = index; i < candidates.length; i++) {
+			if(candidates[i] + sum <= target) {
+				combinationCandidate.add(candidates[i]);
+				combinationSum2Dfs(i+1 , candidates,target,combinationCandidate,combinations,candidates[i] + sum);
+				combinationCandidate.remove(combinationCandidate.size()-1);
+			}
+		}
+	}
+
+	public List<List<Integer>> combinationSum(int[] candidates, int target) {
+		Arrays.sort(candidates);
+		List<List<Integer>> combinations = new ArrayList<>();
+		combinationSumDfs(0,candidates,target,new ArrayList<>(),combinations,0);
+		return combinations;
+	}
+
+	public void combinationSumDfs(int index,int[] candidates, int target,List<Integer> combinationCandidate,List<List<Integer>> combinations,int sum) {
+		if (sum==target) {
+			combinations.add(new ArrayList<>(combinationCandidate));
+			return;
+		}
+
+
+		for (int i = index; i < candidates.length; i++) {
+			if(candidates[i] + sum <= target) {
+				combinationCandidate.add(candidates[i]);
+				combinationSumDfs(i , candidates,target,combinationCandidate,combinations,candidates[i] + sum);
+				combinationCandidate.remove(combinationCandidate.size()-1);
+			}
+		}
+	}
+
+	public int divide(int dividend, int divisor) {
+		if(dividend == Integer.MIN_VALUE){
+			if(divisor == -1) return Integer.MAX_VALUE;
+		}
+
+		long absDividend = dividend < 0 ? -((long)dividend):(long)dividend;
+		long absDivisor = divisor < 0 ? -((long)divisor):(long)divisor ;
+		boolean negative = dividend < 0 ^ divisor < 0;
+
+		if(absDividend < absDivisor) return 0;
+		if(absDivisor == 1) return (int)(negative ? -absDividend :absDividend);
+
+		long quotient = 1;
+
+		while ((quotient+quotient) * absDivisor <= absDividend)
+			quotient = quotient<<1;
+
+		long midQuotient = quotient;
+
+		while (midQuotient != 1){
+			midQuotient =midQuotient>>1;
+			if ((quotient +midQuotient)* absDivisor > absDividend)
+				continue;
+			quotient += midQuotient;
+		}
+		return (int)(negative ? -quotient :quotient);
+	}
+
+	public int divide2(int dividend, int divisor) {
+		if(dividend == Integer.MIN_VALUE){if(divisor == -1)     return   Integer.MAX_VALUE; }
+
+		//if(Math.abs(divisor)>Math.abs(dividend)) return 0;
+
+		int remainder = 0;
+		int quotient = 0;
+		boolean isNegativeResult = false;
+
+		if((divisor<0 && dividend<0) || (divisor>0 && dividend>0) ){
+			remainder = divisor - divisor - divisor;
+		}else{
+			remainder = divisor;
+			isNegativeResult = true;
+		}
+
+		if(divisor == 1 || divisor == -1){
+			return isNegativeResult ? dividend<0? dividend:-1*dividend
+					: dividend<0? -1*dividend:dividend;
+		}
+
+		while(isInInterval(dividend,divisor)){
+			dividend += remainder;
+			quotient++;
+		}
+
+		if(isNegativeResult ){
+			quotient = quotient - quotient - quotient;
+		}
+		return quotient;
+	}
+
+	private boolean isInInterval(int dividend,int divisor){
+		long lDividend = dividend;
+		long lDivisor = divisor;
+		return Math.abs(lDividend)>=Math.abs(lDivisor);
+	}
+
+	public int strStr(String haystack, String needle) {
+		int nLength = needle.length();
+		if(nLength==0) return 0;
+		int hLength=haystack.length();
+
+		if(nLength>hLength) return -1;
+		int result =-1;
+		for (int i=0;i<hLength;i++){
+
+			int j = 0;
+			while(j<=nLength/2
+					&& i+j<hLength
+					&& i+nLength <= hLength
+					&& haystack.charAt(i+j) == needle.charAt(j)
+					&& haystack.charAt(i+nLength-j-1)==needle.charAt(nLength-j-1)){
+				j++;
+
+			}
+			j *= 2;
+			j -= nLength % 2==1 ?1:2;
+
+			if(j==nLength){
+				result=i;
+				break;
+			}
+		}
+		return result;
+	}
+
+	// x+2y=t
+	public List<Integer> choosePossibleSolutions(List<Integer> list){
+		List<Integer> result = new ArrayList<>();
+		for (Integer w: list) {
+			if(w%2 == 0){
+				result.add((w/2)+1);
+			}else{
+				result.add(0);
+			}
+		}
+		return result;
+	}
+
+	public int treasureIsland(String[] island) {
+		if (island == null || island.length == 0) return 0;
+
+		int steps = 0;
+		Queue<Integer[]> queue = new LinkedList<>();
+		queue.add(new Integer[]{0,0});
+		boolean[][] visited = new boolean[island.length][island[0].length()];
+		visited[0][0] = true;
+		//directions; forward, backward, top, down
+		int[][] dirs = new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+
+		// bfs
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
+				Integer[] coordinate = queue.poll();
+				int x = coordinate[0];
+				int y = coordinate[1];
+				if (island[x].charAt(y) == 'X') return steps;
+
+				for (int[] dir : dirs) {
+					int newX = x + dir[0];
+					int newY = y + dir[1];
+
+					if (newX >= 0
+							&& newX < island.length
+							&& newY >= 0
+							&& newY < island[0].length()
+							&& island[x].charAt(y) != 'D'
+							&& !visited[newX][newY]) {
+						queue.add(new Integer[]{newX,newY});
+						visited[newX][newY] = true;
+					}
+				}
+			}
+			steps++;
+		}
+		return 0;
+	}
+
+	public List<String> generateParenthesis(int n) {
+		int start = ((int)Math.pow(2,n)-1);
+		int end = ((int)Math.pow(2,2*n) - 1)/3;
+
+		List<String> result = new ArrayList<>();
+		for (int i = start; i <= end; i+=2) {
+			int sum = 0;
+			StringBuilder wellFormed = new StringBuilder();
+			for (int j = 2*n - 1; j >= 0; j--) {
+				int iBit = (i >> j) & 1;
+				if (iBit == 0){
+					sum++;
+					wellFormed.append("(");
+				}else {
+					sum--;
+					wellFormed.append(")");
+				}
+				if (sum > n+1 || sum<0) break;
+			}
+			if (sum==0)
+				result.add(wellFormed.toString());
+		}
+		
+		return result;
+	}
+
+	public String longestCommonPrefix(String[] strs) {
+		StringBuilder sb = new StringBuilder("");
+		int position = 0;
+		boolean isSame=false;
+		while(position >= 0){
+			for (int i = 0; i < strs.length-1; i++) {
+				if (position >= strs[i].length())
+					break;
+				isSame = strs[i].charAt(position) == strs[i+1].charAt(position);
+				if (!isSame)
+					break;
+			}
+			position++;
+			if (isSame)
+				sb.append(strs[0].charAt(position));
+			else break;
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * @category: Leetcode
+	 * @apiNote: Given a roman numeral, convert it to an integer.
+	 * @implNote time complexity; O(s.length())
+	 *
+	 */
+	public int romanToInt(String s) {
+		Map<Character,Integer> map = new HashMap<>();
+		map.put('I',1);
+		map.put('V',5);
+		map.put('X',10);
+		map.put('L',50);
+		map.put('C',100);
+		map.put('D',500);
+		map.put('M',1000);
+
+		int i = s.length()-1;
+		int result = 0;
+		while(i>=0){
+			int num = map.get(s.charAt(i));
+			result+= num;
+			i--;
+			while(i>=0 && map.get(s.charAt(i))< num){
+				result -=map.get(s.charAt(i));
+				i--;
+			}
+
+		}
+
+		return result;
+	}
+
+
+	/**
+	 * @category: Hackerrank
+	 * @apiNote: Reach the End in Time: A 2-D grid consisting of some blocked (represented as '#') and some unblocked (represented as '.') cells is given. The starting position of a pointer is in the top-left corner of the grid. It is guaranteed that the starting position is in an unblocked cell. It is also guaranteed that the bottom-right cell is unblocked. Each cell of the grid is connected with its right, left, top, and bottom cells (if those cells exist). It takes 1 second for a pointer to move from a cell to its adjacent cell. If the pointer can reach the bottom-right corner of the grid within k seconds, return the string 'Yes'. Otherwise, return the string 'No'.
+	 * @implNote time complexity;
+	 */
+	public String reachTheEnd(String[] grid,int maxTime){
+		/*
+		give a number for all the cells in the grid starting from 0 for (0,0)
+		when you wanna reach any cell by number implement division algorithm wrt colCount as divisor
+		e.g. 11 = 2 (4)+ 3 means (2,3) for 4 columns grid. there is no need to use an additional class for pairs.
+		so the target cell that must be reached is (cRow-1)(cCol-1)
+		*/
+		int nodeNumber = 0;
+		Map<Integer,List<Integer>> graph = new HashMap<>();
+		int cRow = grid.length;
+		int cCol = grid[0].length();
+
+		//construct the connected cells (contains '.'), a graph with adjacency list
+		for (int i = 0; i < cRow; i++) {
+			for (int j = 0; j < cCol; j++) {
+				if (grid[i].charAt(j)=='.'){
+					List<Integer> siblings = new ArrayList<>();
+					if(j<cCol-1 && grid[i].charAt(j+1)=='.')
+						siblings.add(nodeNumber+1);
+					if(i<cRow-1 && grid[i+1].charAt(j)=='.')
+						siblings.add(nodeNumber+cCol);
+					graph.put(nodeNumber,siblings);
+				}
+				nodeNumber++;
+			}
+		}
+
+		int reachTime = 0;
+		int targetCellNo = cCol*cRow-1;
+
+		//implement the dfs algorithm
+		Stack<Integer> stack = new Stack<>();
+		stack.add(0);
+		boolean [][]visited = new boolean[cRow][cCol];
+
+		while (!stack.isEmpty()){
+			Integer currentNode = stack.pop();
+			System.out.println("currentNode: " + currentNode);
+			if(currentNode == targetCellNo && reachTime <= maxTime){
+				return "Yes";
+			}
+
+			reachTime++;
+			int rowCurrent = currentNode/cCol;
+			int colCurrent = currentNode%cCol;
+			if (!visited[rowCurrent][colCurrent]){
+				visited[currentNode/cCol][currentNode%cCol]=true;
+				List<Integer> subNodes = graph.get(currentNode);
+				for (Integer i: subNodes) {
+					if(!visited[i/cCol][i%cCol])
+						stack.push(i);
+				}
+			}
+		}
+
+		return "No";
+	}
+
+	/**
+	 * @category: Hackerrank
+	 * @apiNote: Parking Dilemma: There are many cars parked in a parking lot. The parking lot is a straight line with a parking spot for every meter. There are n cars currently parked and a roofer wants to cover them with a roof. The requirement is that at least k cars currently in the lot are covered by the roof. Determine the minimum length of the roof to cover k cars.
+	 * @implNote time complexity; O(nlogn); n:cars.length
+	 *
+	 */
+	public long carParkingRoof(List<Long> cars, int k) {
+		// Write your code here
+		Collections.sort(cars);
+		long result = Long.MAX_VALUE;
+		for (int i = 0; i <= cars.size() - k; i++) {
+			result = Math.min(result,cars.get(i+k-1) - cars.get(i)+1);
+		}
+		return result;
+	}
+
+	/**
+	 * @category: Hackerrank
+	 * @apiNote: Competitive Gaming: A group of friends are playing a video game together. During the game, each player earns a number of points. At the end of a round, players who achieve at least a certain rank get to "level up" their characters to gain increased abilities. Given the scores of the players at the end of a round, how many players will be able to level up?
+	 * Note: Players with equal scores will have equal ranks, but the player with the next lower score will be ranked based on the position within the list of all players' scores. For example, if there are four players, and three players tie for first place, their ranks are 1, 1, 1, and 4.
+	 * Note:  No player with a score of 0 can level up, regardless of rank.
+	 * @implNote time complexity; O(nlogn); n:scores.length
+	 *
+	 */
+	public int numPlayers(int k, List<Integer> scores) {
+		int result = 0;
+		List<Integer> ranks = new ArrayList<>();
+		Collections.sort(scores,Collections.reverseOrder());
+		int rankOrder = 1;
+		ranks.add(rankOrder);
+		for (int i = 1; i < scores.size(); i++) {
+			rankOrder++;
+			if(scores.get(i)==scores.get(i-1)){
+				ranks.add(ranks.get(i-1));;
+			}
+			else{
+				ranks.add(rankOrder);
+			}
+		}
+
+		for (int i = 0; i < ranks.size(); i++) {
+			if(ranks.get(i)<=k)
+				result++;
+		}
+
+		return result;
+	}
+
+
 	/**
 	 * @category: Leetcode
 	 * @apiNote: Given an array A of strings made only from lowercase letters, return a list of all characters that show up in all strings within the list (including duplicates).  For example, if a character occurs 3 times in all strings but not 4 times, you need to include that character three times in the final answer.
@@ -235,7 +716,7 @@ public class Solution {
 	 * @apiNote: Merge two sorted linked lists and return it as a sorted list. The list should be made by splicing together the nodes of the first two lists.
 	 * @implNote time complexity; O(n)
 	 */
-	public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+	public ListNode mergeTwoLists2(ListNode l1, ListNode l2) {
 		ListNode temp1 = l1;
 		ListNode temp2 = l2;
 		ListNode temp = null;
@@ -291,6 +772,76 @@ public class Solution {
 		}
 
 		return head;
+	}
+
+	public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+		if(l1 == null) return l2;
+		if(l2 == null) return l1;
+
+		ListNode head = null;
+		ListNode temp = null;
+
+		while(l1!=null && l2!=null){
+			if(l1.val==l2.val){
+				if(head == null){
+					head = new ListNode(l1.val);
+					temp = head;
+				}else{
+					temp.next = new ListNode(l1.val);
+					temp = temp.next;
+				}
+				temp.next = new ListNode(l1.val);
+				temp = temp.next;
+				addNode(head,temp,l1.val);
+				addNode(head,temp,l1.val);
+
+				l1 = l1.next;
+				l2 = l2.next;
+			}else if(l1.val < l2.val){
+				if(head == null){
+					head = new ListNode(l1.val);
+					temp = head;
+				}else{
+					temp.next = new ListNode(l1.val);
+					temp = temp.next;
+				}
+				l1 = l1.next;
+			}else{
+				if(head == null){
+					head = new ListNode(l2.val);
+					temp = head;
+				}else{
+					temp.next = new ListNode(l2.val);
+					temp = temp.next;
+				}
+				l2 = l2.next;
+			}
+
+		}
+
+		while(l1!=null){
+			temp.next = new ListNode(l1.val);
+			temp = temp.next;
+			l1 = l1.next;
+		}
+
+		while(l2!=null){
+			temp.next = new ListNode(l2.val);
+			temp = temp.next;
+			l2 = l2.next;
+		}
+
+		return head;
+	}
+
+	private void addNode(ListNode head, ListNode current, int val){
+		if(head == null){
+			head = new ListNode(val,current);
+			current = head;
+			return;
+		}
+		current.next = new ListNode(val);
+		current = current.next;
 	}
 
 	/**
@@ -749,35 +1300,38 @@ The letter u may only be followed by an a.
 	 * @implNote time complexity; O(n)
 	 */
 	public List<Integer> spiralOrder(int[][] matrix) {
-		int cRow = matrix.length;
-		int cCol = matrix[0].length;
+		int topMostIndex = 0;
+		int bottomMostIndex = matrix.length-1;
+		int leftMostIndex = 0;
+		int rightMostIndex = matrix[0].length-1;
+		int direction = 0;	// 0: right, 1:down, 2:left, 3:up
 		List<Integer> result = new ArrayList<>();
-		int cMin = 0,visitedCellCount = 0;
-		while (visitedCellCount < cRow * cCol){
-			for (int i = cMin; i <cCol - cMin; i++){
-				visitedCellCount++;
-				result.add(matrix[cMin][i]);
+		while (topMostIndex<=bottomMostIndex && leftMostIndex<=rightMostIndex){
+			if(direction ==0){
+				for (int i = leftMostIndex; i <= rightMostIndex; i++) {
+					result.add(matrix[topMostIndex][i]);
+				}
+				topMostIndex++;
+				direction=1;
+			}else if(direction==1){
+				for (int i = topMostIndex; i <= bottomMostIndex; i++) {
+					result.add(matrix[i][rightMostIndex]);
+				}
+				direction=2;
+				rightMostIndex--;
+			}else if (direction==2){
+				for (int i = rightMostIndex; i >= leftMostIndex; i--) {
+					result.add(matrix[bottomMostIndex][i]);
+				}
+				direction=3;
+				bottomMostIndex--;
+			}else {
+				for (int i = bottomMostIndex; i >= topMostIndex; i--) {
+					result.add(matrix[i][leftMostIndex]);
+				}
+				direction=0;
+				leftMostIndex++;
 			}
-
-			for (int i = cMin+1; i <cRow - cMin; i++){
-				visitedCellCount++;
-				result.add(matrix[i][cCol-(cMin+1)]);
-			}
-
-			if(visitedCellCount == cRow * cCol)	// 1 x n and n x 1 matrices
-				break;
-
-			for (int i = cCol - (cMin+2); i >=cMin; i--){
-				visitedCellCount++;
-				result.add(matrix[cRow-(cMin+1)][i]);
-			}
-			if(visitedCellCount == cRow * cCol)
-				break;
-			for (int i = cRow - (cMin+2); i > cMin; i--){
-				visitedCellCount++;
-				result.add(matrix[i][cMin]);
-			}
-			cMin++;
 		}
 
 		return result;
@@ -878,7 +1432,7 @@ The letter u may only be followed by an a.
 	}
 
 	public boolean isBalancedWithStack(String s) {
-		Deque<Character> stack = new ArrayDeque<>();
+		Stack<Character> stack = new Stack<>();
 
 		for (int i = 0; i < s.length(); i++) {
 			char x = s.charAt(i);
@@ -920,10 +1474,10 @@ The letter u may only be followed by an a.
 	 * @apiNote:  Numbers are randomly generated and stored into an (expanding) array. keep track of the median
 	 * @implNote time complexity;
 	 */
-	public IntHeap minHeap = new IntHeap(IntHeap.MinMaxType.MIN_HEAP);
-	public IntHeap maxHeap = new IntHeap(IntHeap.MinMaxType.MAX_HEAP);
-//	PriorityQueue<Integer> minHeap = new PriorityQueue<>(10); // for saving bigger elements
-//	PriorityQueue<Integer> maxHeap = new PriorityQueue<>(10,Collections.reverseOrder()); // for saving smaller elements
+//	public IntHeap minHeap = new IntHeap(IntHeap.MinMaxType.MIN_HEAP);
+//	public IntHeap maxHeap = new IntHeap(IntHeap.MinMaxType.MAX_HEAP);
+	PriorityQueue<Integer> minHeap = new PriorityQueue<>(10); // for saving bigger elements
+	PriorityQueue<Integer> maxHeap = new PriorityQueue<>(10,Collections.reverseOrder()); // for saving smaller elements
 	public int medianOfExpandingArray(int val) {
 		int median = 0;
 
@@ -1144,7 +1698,7 @@ The letter u may only be followed by an a.
 	 * @apiNote: Given a string s, find the longest palindromic substring in s. You
 	 *           may assume that the maximum length of s is 1000.
 	 */
-	public String longestPalindrome(String s) {
+	public String longestPalindrome2(String s) {
 		int length = s.length();
 		if (isPalindrome(s))
 			return s;
@@ -1213,6 +1767,23 @@ The letter u may only be followed by an a.
 		return result;
 	}
 
+	public String longestPalindrome(String s) {
+//		String result = "";
+		int end = s.length();
+		int longestStart = 0;
+		int longestEnd = 0;
+		while (end>longestEnd-longestStart){
+			for (int i = 0; end-i>longestEnd-longestStart; i++) {
+				if (isPalindrome(s.substring(i,end))){
+					longestStart = i;
+					longestEnd = end;
+				}
+			}
+			end--;
+		}
+		return s.substring(longestStart,longestEnd);
+	}
+
 	public static boolean isPalindrome(String str) {
 		int i = 0, j = str.length() - 1;
 		while (i < j) {
@@ -1251,4 +1822,73 @@ The letter u may only be followed by an a.
 
 		return longestLength;
 	}
+
+	public int[][] rotation(int[][] matrix){
+		int start = 0, end = matrix.length - 1;
+		int temp = 0;
+		//save left vertical line to temp and rotate 90 degree line by line
+		while( start < end ){
+			for( int i = 0; i < end - start; i++ )
+			{
+				temp = matrix[ start ][ start + i ];
+				matrix[ start ][ start + i ] = matrix[ end - i ][ start ];
+				matrix[ end - i ][ start ] = matrix[ end ][ end - i ];
+				matrix[ end ][ end - i ] = matrix[ start + i ][ end ];
+				matrix[ start + i ][ end ] = temp;
+			}
+			start++;
+			end--;
+		}
+		return matrix;
+	}
+
+	public List<List<Integer>> permute(int[] arr) {
+		List<List<Integer>> list = new ArrayList<>();
+		permuteHelper(list, new ArrayList<>(), arr);
+		return list;
+	}
+
+	private void permuteHelper(List<List<Integer>> list, List<Integer> resultList, int [] arr){
+		if(resultList.size() == arr.length){
+			list.add(new ArrayList<>(resultList));
+			return;
+		}
+		for(int i = 0; i < arr.length; i++){
+			if(resultList.contains(arr[i]))  continue;
+			resultList.add(arr[i]);
+			permuteHelper(list, resultList, arr);
+			resultList.remove(resultList.size() - 1);
+		}
+	}
+
+	public void permutation(String str) {
+		permutation(str, "");
+
+	}
+
+	public void permutation(String str, String prefix) {
+		if (str.length() == 0) {
+			System.out.println(prefix);
+		} else {
+			for (int i= 0; i < str.length(); i++) {
+				String rem = str.substring(0, i) + str.substring(i + 1);
+				permutation(rem, prefix + str.charAt(i));
+			}
+		}
+	}
+	public int[][] rotateMatrix(int[][] matrix){
+		int rowIndex= matrix.length-1;
+		int colIndex=matrix[0].length-1;
+		int temp=0;
+		for (int i = 0; i < colIndex-i; i++) {
+			temp = matrix[i][i];
+			matrix[i][i] = matrix[i+rowIndex][i];
+			matrix[i+rowIndex][i] = matrix[i+rowIndex][i+colIndex];
+			matrix[i+rowIndex][i+colIndex] = matrix[i][i+colIndex];
+			matrix[i][i+colIndex]=temp;
+		}
+
+		return matrix;
+	}
+
 }

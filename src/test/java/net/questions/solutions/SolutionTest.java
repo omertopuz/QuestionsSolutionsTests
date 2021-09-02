@@ -5,6 +5,7 @@ import org.junit.jupiter.api.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -67,7 +68,7 @@ class SolutionTest {
 	@Tag("LeetCode")
 	void longestPalindrome() {
 		assertAll(
-				() -> assertEquals(solution.longestPalindrome("babad"),"bab"),
+				() -> assertEquals(solution.longestPalindrome("babad"), "aba"),
 				() -> assertEquals(solution.longestPalindrome("cbbd"),"bb"),
 				() -> assertEquals(solution.longestPalindrome("euazbipzncptldueeuechubrcourfpftcebikrxhybkymimgvldiwqvkszfycvqyvtiwfckexmowcxztkfyzqovbtmzpxojfofbvwnncajvrvdbvjhcrameamcfmcoxryjukhpljwszknhiypvyskmsujkuggpztltpgoczafmfelahqwjbhxtjmebnymdyxoeodqmvkxittxjnlltmoobsgzdfhismogqfpfhvqnxeuosjqqalvwhsidgiavcatjjgeztrjuoixxxoznklcxolgpuktirmduxdywwlbikaqkqajzbsjvdgjcnbtfksqhquiwnwflkldgdrqrnwmshdpykicozfowmumzeuznolmgjlltypyufpzjpuvucmesnnrwppheizkapovoloneaxpfinaontwtdqsdvzmqlgkdxlbeguackbdkftzbnynmcejtwudocemcfnuzbttcoew"),"aqkqa"),
 				() -> assertEquals(solution.longestPalindrome("cwziydanrqvsdtvnnqgjnbrvvwxwqojeqgxhwxdoktjktulemwpbeqscbbtbfvkxsrjetfdrovcrdwzfmnnihtgxybuairswfewvpuscocqifuwylhssldpjrawqdrbvkykpaggspbfrulcktpbofchzikhzxhpocgvdbwpewpywsgqbczmamprklaoovcfecwchhmsaqkhvuvvzjblmgvqpqtnlipgqsanvovylpmxlmxvymppdykphhaamtxjnnlsqfwjwhyywgurteaummwhvavxbcpgrfffxrowluqmqjaugryxdmwvyokdcfcvcytxpixbvwrdgzctejdoaavgtezexmvxgrkpnayvfarkyoruofqmpnsqdzojxqrjsnfwsbzjmaoigytygukqlrcqaxazvmytgfghdczvzphfdbnxtklaiqqsotavdmhiaermluafheowcobjqmrkmlzyas"),"gytyg"),
@@ -78,7 +79,7 @@ class SolutionTest {
 				() -> assertEquals(solution.longestPalindrome("jrjnbctoqgzimtoklkxcknwmhiztomaofwwzjnhrijwkgmwwuazcowskjhitejnvtblqyepxispasrgvgzqlvrmvhxusiqqzzibcyhpnruhrgbzsmlsuacwptmzxuewnjzmwxbdzqyvsjzxiecsnkdibudtvthzlizralpaowsbakzconeuwwpsqynaxqmgngzpovauxsqgypinywwtmekzhhlzaeatbzryreuttgwfqmmpeywtvpssznkwhzuqewuqtfuflttjcxrhwexvtxjihunpywerkktbvlsyomkxuwrqqmbmzjbfytdddnkasmdyukawrzrnhdmaefzltddipcrhuchvdcoegamlfifzistnplqabtazunlelslicrkuuhosoyduhootlwsbtxautewkvnvlbtixkmxhngidxecehslqjpcdrtlqswmyghmwlttjecvbueswsixoxmymcepbmuwtzanmvujmalyghzkvtoxynyusbpzpolaplsgrunpfgdbbtvtkahqmmlbxzcfznvhxsiytlsxmmtqiudyjlnbkzvtbqdsknsrknsykqzucevgmmcoanilsyyklpbxqosoquolvytefhvozwtwcrmbnyijbammlzrgalrymyfpysbqpjwzirsfknnyseiujadovngogvptphuyzkrwgjqwdhtvgxnmxuheofplizpxijfytfabx"),"qosoq"),
 				() -> assertEquals(solution.longestPalindrome("abcda"),"a"),
 				() -> assertEquals(solution.longestPalindrome("aaaa"),"aaaa"),
-				() -> assertEquals(solution.longestPalindrome("ac"),"a"),
+				() -> assertEquals(solution.longestPalindrome("ac"),"c"),
 				() -> assertEquals(solution.longestPalindrome("a"),"a")
 		);
 	}
@@ -563,6 +564,131 @@ class SolutionTest {
 				() -> assertEquals(solution.coinChange(new int[]{1,2,5},11),3)
 				,() -> assertEquals(solution.coinChange(new int[]{2,3},7),3)
 				,() -> assertEquals(solution.coinChange(new int[]{3,5,6},7),-1)
+		);
+	}
+
+	@Test
+	@DisplayName("Competitive Gaming")
+	@Tag("Hackerrank")
+	void testNumPlayers() {
+		assertAll(
+				() -> assertEquals(solution.numPlayers(3,new ArrayList<>(Arrays.asList(100, 50, 50, 25))),3)
+
+		);
+	}
+
+	@Test
+	@DisplayName("Parking Dilemma")
+	@Tag("Hackerrank")
+	void testCarParkingRoof() {
+		assertAll(
+				() -> assertEquals(solution.carParkingRoof(new ArrayList<>(Arrays.asList(6L, 2L, 12L, 7L)),3),6)
+				,() -> assertEquals(solution.carParkingRoof(new ArrayList<>(Arrays.asList(2L, 10L, 8L, 17L)),3),9)
+				,() -> assertEquals(solution.carParkingRoof(new ArrayList<>(Arrays.asList(1L, 2L, 3L, 10L)),4),10)
+
+		);
+	}
+
+	@Test
+	@DisplayName("Reach the End in Time")
+	@Tag("Hackerrank")
+	void testReachTheEnd() {
+		assertAll(
+				() -> assertEquals(solution.reachTheEnd(new String[]{"....","....","#..#",".#.."},6),"Yes")
+//				() -> assertEquals(solution.reachTheEnd(new String[]{"..##","#.##","#..."},5),"Yes")
+//		() -> assertEquals(solution.reachTheEnd(new String[]{"..##","#.##","##.."},5),"No")
+//		() -> assertEquals(solution.reachTheEnd(new String[]{".#","#."},2),"No")
+		);
+	}
+
+	@Test
+	@DisplayName("Roman to Integer")
+	@Tag("Leetcode")
+	void testRomanToInt() {
+
+		assertAll(
+//				() -> assertEquals(solution.romanToInt("III"),3)
+//				() -> assertEquals(solution.romanToInt("IV"),4)
+				() -> assertEquals(solution.romanToInt("IX"),9)
+				,() -> assertEquals(solution.romanToInt("LVIII"),58)
+				,() -> assertEquals(solution.romanToInt("MCMXCIV"),1994)
+		);
+	}
+
+	@Test
+	@DisplayName("Generate Parentheses")
+	@Tag("Leetcode")
+	void testGenerateParenthesis() {
+
+		assertAll(
+//				() -> assertEquals(solution.generateParenthesis(3),new ArrayList<>(Arrays.asList("((()))", "(()())", "(())()", "()(())", "()()()")))
+				() -> assertEquals(solution.generateParenthesis(4),new ArrayList<>(Arrays.asList("(((())))","((()()))","((())())","((()))()","(()(()))","(()()())","(()())()","(())(())","(())()()","()((()))","()(()())","()(())()","()()(())","()()()()")))
+		);
+	}
+
+	@Test
+	@DisplayName("Treasure Island I")
+	@Tag("Amazon")
+	void testTreasureIsland() {
+
+		assertAll(
+				() -> assertEquals(solution.treasureIsland(new String[]{
+						"OOOO","DODO","OOOO","XDDO"
+				}),5)
+				,() -> assertEquals(solution.treasureIsland(new String[]{
+						"OOOO","XODO","OOOO","ODDO"
+				}),1)
+		);
+	}
+
+	@Test
+	@DisplayName(" Implement strStr()")
+	@Tag("Leetcode")
+	void testStrStr() {
+		assertAll(
+				() -> assertEquals(solution.strStr("abc","abc"),0)
+		);
+	}
+
+	@Test
+	@DisplayName("Divide Two Integers")
+	@Tag("Leetcode")
+	void testDivide() {
+		assertAll(
+//				() -> assertEquals(solution.divide(143,5),28)
+//				() -> assertEquals(solution.divide(4143,987),4)
+//				() -> assertEquals(solution.divide(4894846,23),212819)
+//				() -> assertEquals(solution.divide(4894846,23),4894846/23)
+//				() -> assertEquals(solution.divide(52,3),17)
+//				() -> assertEquals(solution.divide(Integer.MAX_VALUE,2),Integer.MAX_VALUE/2)
+				() -> assertEquals(solution.divide(Integer.MIN_VALUE,2),Integer.MIN_VALUE/2)
+		);
+	}
+
+	@Test
+	@DisplayName("Combination Sum")
+	@Tag("Leetcode")
+	void testCombinationSum() {
+		assertAll(
+//				() -> assertEquals(solution.combinationSum(new int[]{2,3,4,5},8)
+//						,Arrays.asList(Arrays.asList(2,2,2,2),Arrays.asList(2,3,3)))
+				() -> assertEquals(solution.combinationSum(new int[]{2,7,6,3,5,1},9)
+						,Arrays.asList(Arrays.asList(2,2,2,2),Arrays.asList(2,3,3)))
+
+		);
+	}
+
+	@Test
+	@DisplayName("Combination Sum 2")
+	@Tag("Leetcode")
+	void testCombinationSum2() {
+		assertAll(
+				() -> assertIterableEquals(solution.combinationSum2(new int[]{1,1,2,5,6,7,10},8)
+						,Arrays.asList(Arrays.asList(1,1,6),Arrays.asList(1,2,5),Arrays.asList(1,7),Arrays.asList(2,6)))
+//		assertAll(
+//				() -> assertIterableEquals(solution.combinationSum2(new int[]{2,5,2,1,2},5)
+//						,Arrays.asList(Arrays.asList(2,2,1),Arrays.asList(5)))
+
 		);
 	}
 }
