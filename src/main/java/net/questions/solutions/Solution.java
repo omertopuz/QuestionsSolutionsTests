@@ -84,9 +84,10 @@ public class Solution {
 			if(uniqueNumbers.contains(ocurences[i])){
 				int last = uniqueNumbers.get(uniqueNumbers.size()-1);
 				if(ocurences[i] > last){
-					deleteCount +=Math.abs(last - ocurences[i] -1);
-					if(ocurences[i] - last-1>0)
-						uniqueNumbers.add(ocurences[i] - last-1);
+					int currentDeletion = Math.abs(last - ocurences[i] -1);
+					deleteCount +=currentDeletion;
+					if(ocurences[i] - currentDeletion>0)
+						uniqueNumbers.add(ocurences[i] - currentDeletion);
 
 				}else {
 					deleteCount++;
