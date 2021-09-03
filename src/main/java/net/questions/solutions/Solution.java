@@ -57,45 +57,44 @@ public class Solution {
 		return result;
 	}
 
-	/**@implNote: given a string S, find how many character should be deleted to ensure that every character has unique count
+	/**@implNote: Minimum Deletions to Make Character Frequencies Unique
+	 * A string s is called good if there are no two different characters in s that have the same frequency.
+	 * Given a string s, return the minimum number of characters you need to delete to make s good.
+	 * The frequency of a character in a string is the number of times it appears in the string. For example, in the string "aab", the frequency of 'a' is 2, while the frequency of 'b' is 1.
 	 * e.g. S:"abcd" return 3, S:"aaaabbbb" return 1
 	 * */
-	public int findHowManyCharShouldBeDeleted(String S) {
-		// write your code in Java SE 8
-		int len = S.length();
-		int[] ocurences = new int[26];
+	public int minDeletions(String s) {
+		int len = s.length();
+		int[] occurrences = new int[26];
 		for(int i =0;i<len;i++){
-			ocurences[S.charAt(i)-'a']++;
+			occurrences[s.charAt(i)-'a']++;
 		}
 
 		int deleteCount = 0;
-		List<Integer> uniqueNumbers = new ArrayList<>();
+		Set<Integer> uniqueNumbers = new HashSet<>();
+		Arrays.sort(occurrences);
 
-		ocurences = IntStream.of(ocurences)
-				.boxed()
-				.sorted(Comparator.reverseOrder())
-				.mapToInt(i -> i)
-				.toArray();
+		int lastElementAdded = occurrences[25];
+		uniqueNumbers.add(lastElementAdded);
+		for(int i =24;i>=0;i--){
+			if(occurrences[i] == 0) continue;
 
-		uniqueNumbers.add(ocurences[0]);
-		for(int i =1;i<26;i++){
-			if(ocurences[i] == 0) continue;
-
-			if(uniqueNumbers.contains(ocurences[i])){
-				int last = uniqueNumbers.get(uniqueNumbers.size()-1);
-				if(ocurences[i] > last){
-					deleteCount +=Math.abs(last - ocurences[i] -1);
-					if(ocurences[i] - last-1>0)
-						uniqueNumbers.add(ocurences[i] - last-1);
-
+			if(uniqueNumbers.contains(occurrences[i])){
+				if(occurrences[i] > lastElementAdded){
+					int currentDeletion = Math.abs(lastElementAdded - occurrences[i] -1);
+					deleteCount +=currentDeletion;
+					if(occurrences[i] - currentDeletion>0){
+						lastElementAdded = occurrences[i] - currentDeletion;
+					}
 				}else {
 					deleteCount++;
-					if(ocurences[i]-1>0)
-						uniqueNumbers.add(ocurences[i]-1);
+					if(occurrences[i]-1>0)
+						lastElementAdded = occurrences[i]-1;
 				}
 			}else{
-				uniqueNumbers.add(ocurences[i]);
+				lastElementAdded = occurrences[i];
 			}
+			uniqueNumbers.add(lastElementAdded);
 		}
 
 		return deleteCount;
