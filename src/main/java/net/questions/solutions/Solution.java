@@ -7,6 +7,130 @@ import java.util.stream.Stream;
 
 public class Solution {
 
+	/**@implNote :Rotate List
+	 * @category: Leetcode
+	 * */
+	public ListNode rotateRight(ListNode head, int k) {
+		if(head == null || head.next == null) return head;
+		ListNode temp = head;
+		ListNode runner = head;
+
+		int len = 1;
+		while(runner.next != null){
+			temp = temp.next;
+			len++;
+			if(runner.next!= null){
+				runner = runner.next;
+			}
+
+			if(runner != null && runner.next != null){
+				runner = runner.next;
+				len++;
+			}
+		}
+
+		int kModLen = k % len;
+		if(kModLen == 0)
+			return head;
+
+		int mid = len % 2 == 0 ? len/2 : len/2 +1  ;
+		if(kModLen < mid){
+			while(--mid > kModLen){
+				temp = temp.next;
+			}
+		}else{
+			temp = head;
+			while(++kModLen < len){
+				temp = temp.next;
+			}
+		}
+
+		runner.next = head;
+		head = temp.next;
+		temp.next = null;
+
+		return head;
+	}
+
+	/**@implNote :Given an array of positive integers nums and a positive integer target, return the minimal length of a contiguous subarray [numsl, numsl+1, ..., numsr-1, numsr] of which the sum is greater than or equal to target. If there is no such subarray, return 0 instead.
+	 * Input: target = 7, nums = [2,3,1,2,4,3], Output: 2
+	 * @category: Leetcode
+	 * */
+	public int minSubArrayLen(int target, int[] nums) {
+		int sumUpTo = 0;
+		int minLength = Integer.MAX_VALUE;
+		int beginner = 0;
+
+		for(int i=0;i<nums.length;i++){
+			sumUpTo += nums[i];
+			while(sumUpTo>=target){
+				sumUpTo -=nums[beginner];
+				if(i - beginner < minLength)
+					minLength = i - beginner +1;
+				beginner++;
+			}
+
+		}
+
+		return minLength == Integer.MAX_VALUE?0:minLength;
+	}
+
+	/**@implNote :return the longest word in the string. If there are two or more words that are the same length, return the first word from the string with that length. Ignore punctuation and assume sen will not be empty. Words may also contain numbers, for example "Hello world123 567"
+	 * Input: "fun&!! time" Output: time, Input: "I love dogs" Output: love
+	 * @category: coderbyte
+	 * */
+	public static String longestWord(String sen) {
+		int beginIndex = 0;
+		int endIndex = 0;
+		int resultBeginIndex = 0;
+		int resultEndIndex = 0;
+		for (int i = 0; i < sen.length(); i++) {
+			if(sen.charAt(i) == ' '){
+				if(endIndex - beginIndex>resultEndIndex - resultBeginIndex){
+					resultBeginIndex = beginIndex;
+					resultEndIndex = endIndex;
+				}
+				beginIndex = i+1;
+				endIndex = i+1;
+			}else {
+				if ((sen.charAt(i) >= 'a' && sen.charAt(i) <= 'z')
+						|| (sen.charAt(i) >= 'A' && sen.charAt(i) <= 'Z')) {
+					endIndex++;
+				}
+			}
+		}
+		return sen.substring(resultBeginIndex,resultEndIndex);
+	}
+
+	/**@implNote :strArr which will contain 2 elements: the first element will represent a list of comma-separated numbers sorted in ascending order, the second element will represent a second list of comma-separated numbers (also sorted). Your goal is to return a comma-separated string containing the numbers that occur in elements of strArr in sorted order. If there is no intersection, return the string false
+	 * Input: new String[] {"1, 3, 4, 7, 13", "1, 2, 4, 13, 15"}, Output: 1,4,13
+	 * Input: new String[] {"1, 3, 9, 10, 17, 18", "1, 4, 9, 10"},Output: 1,9,10
+	 * @category: coderbyte
+	 * */
+	public String findIntersection(String[] strArr) {
+		String[] numsStr1 = strArr[0].replace(" ","").split(",");
+		String[] numsStr2 = strArr[1].replace(" ","").split(",");
+		int[] nums1 = new int[numsStr1.length];
+		int[] nums2 = new int[numsStr2.length];
+		for(int i = 0;i<numsStr1.length;i++) nums1[i] = Integer.parseInt(numsStr1[i]);
+		for(int i = 0;i<numsStr2.length;i++) nums2[i] = Integer.parseInt(numsStr2[i]);
+
+		StringBuilder sb = new StringBuilder();
+		int j = 0;
+		for(int i = 0;i<nums1.length;i++){
+			for(;j<nums2.length && nums2[j]<=nums1[i];j++){
+				if(nums1[i]== nums2[j]){
+					sb.append(nums2[j]);
+					sb.append(",");
+					break;
+				}
+			}
+		}
+		if(sb.length()>0)
+			sb.deleteCharAt(sb.length()-1);
+		return sb.toString();
+	}
+
 	public static int sherlockAndAnagrams(String s) {
 		// Write your code here
 		Map<String,List<String>> anagramsList = new HashMap<>();
@@ -1781,7 +1905,9 @@ The letter u may only be followed by an a.
 		int longestEnd = 0;
 		while (end>longestEnd-longestStart){
 			for (int i = 0; end-i>longestEnd-longestStart; i++) {
+				System.out.println("i: " + i + "\tend: " + end);
 				if (isPalindrome(s.substring(i,end))){
+					System.out.println("found: (" + i + "," + end+")");
 					longestStart = i;
 					longestEnd = end;
 				}
@@ -1801,7 +1927,49 @@ The letter u may only be followed by an a.
 		}
 		return true;
 	}
+	public String longestPalindrome3(String s) {
+		int begin=0;
+		int end=0;
+		int resultBegin=0;
+		int resultEnd=1;
+		for (int i = 1;i<s.length();i++){
+			if (end>0 && i-1>=0 && begin+1<s.length() &&
+					 s.charAt(i) == s.charAt(begin) &&  s.charAt(i-1) == s.charAt(begin+1)){
+				end++;
+				continue;
+			}
 
+			if (s.charAt(i- 1) == s.charAt(i)){
+				begin = i-1;
+				while (i<s.length()-1 && begin>0 && s.charAt(i+1) == s.charAt(begin-1)){
+					begin--;
+					i++;
+				}
+				end = i+1;
+			}else if(i-2>=0 && s.charAt(i-2) == s.charAt(i)){
+				begin = i-2;
+				while (i<s.length()-1 && begin>0 && s.charAt(i+1) == s.charAt(begin-1)){
+					begin--;
+					i++;
+				}
+				end = i+1;
+			}else {
+				if(end - begin >resultEnd-resultBegin) {
+					resultBegin = begin;
+					resultEnd = end;
+				}
+				end = 0;
+				begin = 0;
+			}
+		}
+
+		if(end - begin >resultEnd-resultBegin) {
+			resultBegin = begin;
+			resultEnd = end;
+		}
+
+		return s.substring(resultBegin,resultEnd);
+	}
 	/**
 	 * @category: LeetCode
 	 * @apiNote: Given a string, find the length of the longest substring without repeating characters.
@@ -1830,6 +1998,25 @@ The letter u may only be followed by an a.
 		return longestLength;
 	}
 
+	public int lengthOfLongestSubstring2(String s) {
+		int longest = 0;
+		Map<Character,Integer> charIndexes = new HashMap<>();
+		int begin =0;
+		for(int i = 0;i<s.length();i++){
+			if(charIndexes.containsKey(s.charAt(i))){
+				longest = Math.max(longest,i-begin);
+				if(begin < charIndexes.get(s.charAt(i))+1)
+					begin = charIndexes.get(s.charAt(i))+1;
+			}
+			charIndexes.put(s.charAt(i),i);
+		}
+
+		if(s.length()-begin > longest)
+			longest = s.length()-begin;
+
+		return longest;
+
+	}
 	public int[][] rotation(int[][] matrix){
 		int start = 0, end = matrix.length - 1;
 		int temp = 0;
