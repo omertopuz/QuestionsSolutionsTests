@@ -1651,15 +1651,23 @@ The letter u may only be followed by an a.
 	 *           such that the container contains the most water.
 	 */
 	public int maxArea(int[] height) {
-		int result = 0;
-		for (int i = 0; i < height.length; i++) {
-			if (height[i] == 0)
-				continue;
-			for (int j = i + 1; j < height.length && height[i] - height[i > 0 ? i - 1 : i] >= 0; j++) {
-				result = Math.max(result, calculateArea(height[j], height[i], i + 1, j + 1));
+		int len = height.length-1;
+		int leftIndex = 0;
+		int rightIndex = len;
+		int mostWater = 0;
+		while(leftIndex<rightIndex){
+
+			if(height[leftIndex] < height[rightIndex]){
+				mostWater = Math.max(mostWater,height[leftIndex] * (rightIndex-leftIndex));
+				leftIndex++;
+			}else{
+				mostWater = Math.max(mostWater,height[rightIndex] * (rightIndex-leftIndex));
+				rightIndex--;
 			}
+
 		}
-		return result;
+
+		return mostWater;
 	}
 
 	private int calculateArea(int a, int b, int i, int j) {
