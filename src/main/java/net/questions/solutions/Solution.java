@@ -7,6 +7,30 @@ import java.util.stream.Stream;
 
 public class Solution {
 
+	/*
+    Question Description
+
+Given a stock price of one company for a day, create an method that would return the maximum profit for the day given the following conditions:
+
+- You can only buy and sell once.
+- The difference between buy and sell time must be at least five seconds long.
+Assumptions:
+
+- The difference in time between each stock price is 1 second long.
+- Stock prices are already in order by time.
+- If there is no profit for the day, return 0.
+    * */
+
+    public static long getMaxProfit(List<Long> prices){
+        long maxProfit = 0;
+        long minPrice = Long.MAX_VALUE;
+        for (int i = 0; i < prices.size()-5; i++) {
+            minPrice = Math.min(prices.get(i),minPrice);
+            maxProfit = Math.max(minPrice,prices.get(i+5)-prices.get(i));
+        }
+        return maxProfit>0?maxProfit:0;
+    }
+	
 	public static int sherlockAndAnagrams(String s) {
 		// Write your code here
 		Map<String,List<String>> anagramsList = new HashMap<>();
