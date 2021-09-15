@@ -26,7 +26,7 @@ Assumptions:
         long minPrice = Long.MAX_VALUE;
         for (int i = 0; i < prices.size()-5; i++) {
             minPrice = Math.min(prices.get(i),minPrice);
-            maxProfit = Math.max(minPrice,prices.get(i+5)-prices.get(i));
+            maxProfit = Math.max(maxProfit,prices.get(i+5)-minPrice);
         }
         return maxProfit>0?maxProfit:0;
     }
