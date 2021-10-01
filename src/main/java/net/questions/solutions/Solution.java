@@ -131,6 +131,79 @@ public class Solution {
 		return sb.toString();
 	}
 
+/*
+    * The King of FarFarAway, is considering building some castles on the border. The border is divided into N segments. The King knows the height of the terrain in each segment of the border.
+    * The height of each segment of terrain is stored in array A, with A[P] denoting the height of the P-th segment of the border.
+    * The King has decided to build a castle on top of every hill and in the bottom of every valley.
+Let [P..Q] denote a group of consecutive segments from P to Q inclusive such that (0 ≤ P ≤ Q ≤ N−1). Segments [P..Q] form a hill or a valley if all the following conditions are satisfied:
+
+The terrain height of each segment from P to Q is the same (A[P] = A[P+1] = ... = A[Q]);
+If P > 0 then A[P−1] < A[P] (for a hill) or A[P−1] > A[P] (for a valley);
+If Q < N−1 then A[Q+1] < A[Q] (for a hill) or A[Q+1] > A[Q] (for a valley);
+
+That is, a hill is higher than its surroundings and a valley is lower than its surroundings. Note that if the surroundings on either side of the hill or valley don't exist (i.e. at the edges of the area under consideration, where P = 0 or Q = N−1), then the condition is considered satisfied for that side of the hill/valley.
+The king is wondering how many castles is he going to build. Can you help him?
+For example, consider the following array A = [2, 2, 3, 4, 3, 3, 2, 2, 1, 1, 2, 5].
+There are two hills: [3..3] and [11..11]. There are also two valleys: [0..1] and [8..9]. There are no other suitable places for castles.
+
+Write a function:
+that, given an array A consisting of N integers, as explained above, returns the total number of hills and valleys.
+For example, given array A as described above, the function should return 4.
+Given array A = [−3, −3] describing segments with a terrain height below 0, segment [0..1] forms both a hill and a valley, and only one castle can be built, so the function should return 1.
+Write an efficient algorithm for the following assumptions:
+N is an integer within the range [1..100,000];
+each element of array A is an integer within the range [−1,000,000,000..1,000,000,000].
+    * */
+    public int findCastlesCount(int[] A) {
+        // write your code in Java SE 8
+        int castles = 1;
+        int N = A.length;
+
+        for(int i = 0; i< N-1; i++){
+            if(A[i] == A[i+1]) continue;
+            int index = i;
+            if(A[i]<A[i + 1]){
+                while (index<N-1 && A[index]<=A[index + 1]){
+                    index++;
+                }
+            }else {
+                while (index<N-1 && A[index]>=A[index + 1]){
+                    index++;
+                }
+            }
+
+            if(i != index){
+                castles++;
+                i = index-1;
+            }
+        }
+        return castles;
+    }
+
+	/*
+    Question Description
+
+Given a stock price of one company for a day, create an method that would return the maximum profit for the day given the following conditions:
+
+- You can only buy and sell once.
+- The difference between buy and sell time must be at least five seconds long.
+Assumptions:
+
+- The difference in time between each stock price is 1 second long.
+- Stock prices are already in order by time.
+- If there is no profit for the day, return 0.
+    * */
+
+    public static long getMaxProfit(List<Long> prices){
+        long maxProfit = 0;
+        long minPrice = Long.MAX_VALUE;
+        for (int i = 0; i < prices.size()-5; i++) {
+            minPrice = Math.min(prices.get(i),minPrice);
+            maxProfit = Math.max(maxProfit,prices.get(i+5)-minPrice);
+        }
+        return maxProfit>0?maxProfit:0;
+    }
+
 	public static int sherlockAndAnagrams(String s) {
 		// Write your code here
 		Map<String,List<String>> anagramsList = new HashMap<>();
@@ -181,44 +254,46 @@ public class Solution {
 		return result;
 	}
 
-	/**@implNote: Minimum Deletions to Make Character Frequencies Unique
-	 * A string s is called good if there are no two different characters in s that have the same frequency.
-	 * Given a string s, return the minimum number of characters you need to delete to make s good.
-	 * The frequency of a character in a string is the number of times it appears in the string. For example, in the string "aab", the frequency of 'a' is 2, while the frequency of 'b' is 1.
+	/**@implNote: given a string S, find how many character should be deleted to ensure that every character has unique count
 	 * e.g. S:"abcd" return 3, S:"aaaabbbb" return 1
 	 * */
-	public int minDeletions(String s) {
-		int len = s.length();
-		int[] occurrences = new int[26];
+	public int findHowManyCharShouldBeDeleted(String S) {
+		// write your code in Java SE 8
+		int len = S.length();
+		int[] ocurences = new int[26];
 		for(int i =0;i<len;i++){
-			occurrences[s.charAt(i)-'a']++;
+			ocurences[S.charAt(i)-'a']++;
 		}
 
 		int deleteCount = 0;
-		Set<Integer> uniqueNumbers = new HashSet<>();
-		Arrays.sort(occurrences);
+		List<Integer> uniqueNumbers = new ArrayList<>();
 
-		int lastElementAdded = occurrences[25];
-		uniqueNumbers.add(lastElementAdded);
-		for(int i =24;i>=0;i--){
-			if(occurrences[i] == 0) continue;
+		ocurences = IntStream.of(ocurences)
+				.boxed()
+				.sorted(Comparator.reverseOrder())
+				.mapToInt(i -> i)
+				.toArray();
 
-			if(uniqueNumbers.contains(occurrences[i])){
-				if(occurrences[i] > lastElementAdded){
-					int currentDeletion = Math.abs(lastElementAdded - occurrences[i] -1);
+		uniqueNumbers.add(ocurences[0]);
+		for(int i =1;i<26;i++){
+			if(ocurences[i] == 0) continue;
+
+			if(uniqueNumbers.contains(ocurences[i])){
+				int last = uniqueNumbers.get(uniqueNumbers.size()-1);
+				if(ocurences[i] > last){
+					int currentDeletion = Math.abs(last - ocurences[i] -1);
 					deleteCount +=currentDeletion;
-					if(occurrences[i] - currentDeletion>0){
-						lastElementAdded = occurrences[i] - currentDeletion;
-					}
+					if(ocurences[i] - currentDeletion>0)
+						uniqueNumbers.add(ocurences[i] - currentDeletion);
+
 				}else {
 					deleteCount++;
-					if(occurrences[i]-1>0)
-						lastElementAdded = occurrences[i]-1;
+					if(ocurences[i]-1>0)
+						uniqueNumbers.add(ocurences[i]-1);
 				}
 			}else{
-				lastElementAdded = occurrences[i];
+				uniqueNumbers.add(ocurences[i]);
 			}
-			uniqueNumbers.add(lastElementAdded);
 		}
 
 		return deleteCount;
@@ -1905,9 +1980,7 @@ The letter u may only be followed by an a.
 		int longestEnd = 0;
 		while (end>longestEnd-longestStart){
 			for (int i = 0; end-i>longestEnd-longestStart; i++) {
-				System.out.println("i: " + i + "\tend: " + end);
 				if (isPalindrome(s.substring(i,end))){
-					System.out.println("found: (" + i + "," + end+")");
 					longestStart = i;
 					longestEnd = end;
 				}
@@ -1927,49 +2000,7 @@ The letter u may only be followed by an a.
 		}
 		return true;
 	}
-	public String longestPalindrome3(String s) {
-		int begin=0;
-		int end=0;
-		int resultBegin=0;
-		int resultEnd=1;
-		for (int i = 1;i<s.length();i++){
-			if (end>0 && i-1>=0 && begin+1<s.length() &&
-					 s.charAt(i) == s.charAt(begin) &&  s.charAt(i-1) == s.charAt(begin+1)){
-				end++;
-				continue;
-			}
 
-			if (s.charAt(i- 1) == s.charAt(i)){
-				begin = i-1;
-				while (i<s.length()-1 && begin>0 && s.charAt(i+1) == s.charAt(begin-1)){
-					begin--;
-					i++;
-				}
-				end = i+1;
-			}else if(i-2>=0 && s.charAt(i-2) == s.charAt(i)){
-				begin = i-2;
-				while (i<s.length()-1 && begin>0 && s.charAt(i+1) == s.charAt(begin-1)){
-					begin--;
-					i++;
-				}
-				end = i+1;
-			}else {
-				if(end - begin >resultEnd-resultBegin) {
-					resultBegin = begin;
-					resultEnd = end;
-				}
-				end = 0;
-				begin = 0;
-			}
-		}
-
-		if(end - begin >resultEnd-resultBegin) {
-			resultBegin = begin;
-			resultEnd = end;
-		}
-
-		return s.substring(resultBegin,resultEnd);
-	}
 	/**
 	 * @category: LeetCode
 	 * @apiNote: Given a string, find the length of the longest substring without repeating characters.
@@ -1998,25 +2029,6 @@ The letter u may only be followed by an a.
 		return longestLength;
 	}
 
-	public int lengthOfLongestSubstring2(String s) {
-		int longest = 0;
-		Map<Character,Integer> charIndexes = new HashMap<>();
-		int begin =0;
-		for(int i = 0;i<s.length();i++){
-			if(charIndexes.containsKey(s.charAt(i))){
-				longest = Math.max(longest,i-begin);
-				if(begin < charIndexes.get(s.charAt(i))+1)
-					begin = charIndexes.get(s.charAt(i))+1;
-			}
-			charIndexes.put(s.charAt(i),i);
-		}
-
-		if(s.length()-begin > longest)
-			longest = s.length()-begin;
-
-		return longest;
-
-	}
 	public int[][] rotation(int[][] matrix){
 		int start = 0, end = matrix.length - 1;
 		int temp = 0;
