@@ -6,6 +6,280 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class Solution {
+	/**
+	 * @category: Leetcode
+	 * @apiNote: You are given two integer arrays nums1 and nums2, sorted in non-decreasing order, and two integers m and n, representing the number of elements in nums1 and nums2 respectively.
+	 * @implNote time complexity; O(m+n)
+	 *
+	 */
+	public void merge(int[] nums1, int m, int[] nums2, int n) {
+		int len = nums1.length-1;
+		n--;
+		m--;
+		while(n >= 0){
+			if(nums1[m]==nums2[n]){
+				nums1[len--] = nums1[m--];
+				nums1[len--] = nums2[n--];
+			}else if(nums1[m]>nums2[n]){
+				nums1[len--] = nums1[m--];
+			}else{
+				nums1[len--] = nums2[n--];
+			}
+		}
+	}
+
+	public int minimumSwaps(int[] arr) {
+		int minSwaps = 0;
+
+		for(int i = 0;i<arr.length;i++){
+			if(i+1 != arr[i]){
+				int curr = arr[i];
+				while(i != curr-1){
+					int temp = arr[arr[i]-1];
+					arr[arr[i]-1] = arr[temp-1];
+					arr[temp-1] = temp;
+					curr = temp;
+					minSwaps++;
+				}
+			}
+		}
+
+		return minSwaps;
+
+	}
+	public int[] maxCircle(int[][] queries) {
+		int[] maxGroupSize = new int[queries.length];
+		Map<Integer,Set<Integer>> groups = new HashMap<>();
+		Map<Integer,Integer> lookUps = new HashMap<>();
+
+		int tempMaxSize = Integer.MIN_VALUE;
+		for(int i = 0; i< queries.length; i++){
+			if(lookUps.containsKey(queries[i][0])
+					&& lookUps.containsKey(queries[i][1])){
+				groups.get(lookUps.get(queries[i][0]))
+						.addAll(groups.get(lookUps.get(queries[i][1])));
+				lookUps.put(queries[i][1],lookUps.get(queries[i][0]));
+				groups.remove(lookUps.get(queries[i][1]));
+			}else if(lookUps.containsKey(queries[i][0])){
+				groups.get(lookUps.get(queries[i][0])).add(queries[i][1]);
+				lookUps.put(queries[i][1],lookUps.get(queries[i][0]));
+			}else if(lookUps.containsKey(queries[i][1])){
+				groups.get(lookUps.get(queries[i][1])).add(queries[i][0]);
+				lookUps.put(queries[i][0],lookUps.get(queries[i][1]));
+			}else {
+				groups.put(queries[i][0], new HashSet<>(Arrays.asList(queries[i][0],queries[i][1])));
+				lookUps.put(queries[i][0], queries[i][0]);
+				lookUps.put(queries[i][1], queries[i][0]);
+			}
+			tempMaxSize = Math.max(tempMaxSize,groups.get(lookUps.get(queries[i][0])).size());
+			maxGroupSize[i] = Math.max(i>0 ? maxGroupSize[i-1] : 0,tempMaxSize);
+		}
+
+		return  maxGroupSize;
+
+	}
+
+	public static long flippingBits(long n) {
+		boolean[] bits = new boolean[32];
+
+		long flipped = 0;
+		int counter = 32;
+		while(n>0){
+			bits[--counter] = n % 2!=0;
+			n/=2;
+		}
+
+		long powerOfTwo = 1;
+		for(int i = 31;i>=0;i--){
+			flipped += bits[i] ? 0:powerOfTwo;
+			powerOfTwo *=2;
+		}
+		return flipped;
+
+	}
+
+
+	public List<List<Integer>> combine(int n, int k) {
+		List<List<Integer>> result = new ArrayList<>();
+		List<Integer> comb = new ArrayList<>();
+		Stack<Integer> stack = new Stack<>();
+
+		for(int i = n - k +1; i>0;i--)
+			stack.push(i);
+
+		while(!stack.isEmpty()){
+			int curr = stack.pop();
+			comb.add(curr);
+			if(comb.size() == k){
+				result.add(new ArrayList<>(comb));
+				comb.remove(comb.size()-1);
+			}else{
+				for(int i = n; i>curr;i--) stack.push(i);
+			}
+
+			if(curr == n){
+				if( comb.size()>0 && comb.get(comb.size()-1) == curr) comb.remove(comb.size()-1);
+				if( comb.size()>0) comb.remove(comb.size()-1);
+			}
+
+		}
+		return result;
+	}
+
+	public void setZeroes(int[][] matrix) {
+		int m = matrix.length;
+		int n = matrix[0].length;
+		boolean[][] zeroes = new boolean[m][n];
+
+		boolean[] zeroRow = new boolean[m];
+		boolean[] zeroColumn = new boolean[n];
+
+		for(int i=0;i<m;i++){
+			for(int j=0;j<n;j++){
+				zeroes[i][j] = matrix[i][j] == 0;
+			}
+		}
+
+		for(int i=0;i<m;i++){
+			for(int j=0;j<n;j++){
+				if(zeroes[i][j]){
+					for(int k= 0;k<n;k++) matrix[i][k] = 0;
+					for(int k= 0;k<m;k++) matrix[k][j] = 0;
+				}
+			}
+		}
+
+	}
+
+	public String simplifyPath(String path) {
+		int start = 1;
+		Stack<String> stack = new Stack<String>();
+		for (int i = 1; i <= path.length(); i++) {
+			if((i == path.length()) || path.charAt(i) == '/'){
+				String current = path.substring(start,i);
+				start = i+1;
+				if(current.equals("") || current.equals(".")) continue;
+
+				if(current.equals("..")){
+					if(!stack.isEmpty())
+						stack.pop();
+				}else
+					stack.push(current);
+
+
+			}
+		}
+		String simplify = "";
+		while(!stack.isEmpty())
+			simplify = "/"+stack.pop()+simplify;
+		return simplify.length() == 0 ? "/":simplify;
+	}
+
+	/**
+    * Charlemagne, the King of Frankia, is considering building some castles on the border with Servia. The border is divided into N segments. The King knows the height of the terrain in each segment of the border. The height of each segment of terrain is stored in array A, with A[P] denoting the height of the P-th segment of the border. The King has decided to build a castle on top of every hill and in the bottom of every valley.
+Let [P..Q] denote a group of consecutive segments from P to Q inclusive such that (0 ≤ P ≤ Q ≤ N−1). Segments [P..Q] form a hill or a valley if all the following conditions are satisfied:
+The terrain height of each segment from P to Q is the same (A[P] = A[P+1] = ... = A[Q]);
+If P > 0 then A[P−1] < A[P] (for a hill) or A[P−1] > A[P] (for a valley);
+If Q < N−1 then A[Q+1] < A[Q] (for a hill) or A[Q+1] > A[Q] (for a valley);
+That is, a hill is higher than its surroundings and a valley is lower than its surroundings. Note that if the surroundings on either side of the hill or valley don't exist (i.e. at the edges of the area under consideration, where P = 0 or Q = N−1), then the condition is considered satisfied for that side of the hill/valley.
+The king is wondering how many castles is he going to build. Can you help him?
+For example, consider the following array A = [2, 2, 3, 4, 3, 3, 2, 2, 1, 1, 2, 5].
+There are two hills: [3..3] and [11..11]. There are also two valleys: [0..1] and [8..9]. There are no other suitable places for castles.
+Write a function:
+that, given an array A consisting of N integers, as explained above, returns the total number of hills and valleys.
+For example, given array A as described above, the function should return 4.
+Given array A = [−3, −3] describing segments with a terrain height below 0, segment [0..1] forms both a hill and a valley, and only one castle can be built, so the function should return 1.
+Write an efficient algorithm for the following assumptions:
+N is an integer within the range [1..100,000];
+each element of array A is an integer within the range [−1,000,000,000..1,000,000,000].
+    * */
+	public int findCastleCount(int[] A) {
+		// write your code in Java SE 8
+		int N = A.length;
+
+		List<Integer> managed = new ArrayList<>();
+		managed.add(A[0]);
+		for(int i = 1; i< N; i++){
+			if(A[i] == A[i-1]) continue;
+			managed.add(A[i]);
+		}
+		int castles = 1;
+
+		for(int i = 1; i< managed.size()-1; i++){
+			if((managed.get(i) > managed.get(i-1) && managed.get(i)>managed.get(i+1))
+					|| (managed.get(i) < managed.get(i-1) && managed.get(i)<managed.get(i+1))){
+				castles++;
+			}
+		}
+
+		if(managed.size()>1 && managed.get(managed.size()-2) != managed.get(managed.size()-1)){
+			castles++;
+		}
+
+		return castles;
+	}
+
+	public String addBinary(String a, String b) {
+		int lenA = a.length();
+		int lenB = b.length();
+		int resultLength = Math.max(lenA,lenB);
+		char[] resultArray = new char[resultLength+1];
+		int carry = 0;
+
+		while(lenA >0 && lenB >0){
+			--lenA;
+			--lenB;
+			int currentSum = (a.charAt(lenA)-'0') + (b.charAt(lenB)-'0') + carry;
+			carry = currentSum > 1 ? 1:0;
+			currentSum = currentSum % 2;
+
+			resultArray[resultLength--] = currentSum == 1?'1':'0';
+		}
+
+		while(--lenA >= 0){
+			int currentSum = (a.charAt(lenA)-'0') + carry;
+			carry = currentSum > 1 ? 1:0;
+			currentSum = currentSum % 2;
+
+			resultArray[lenA+1] = currentSum == 1?'1':'0';
+		}
+
+		while(--lenB >= 0){
+			int currentSum = (b.charAt(lenB)-'0') + carry;
+			carry = currentSum > 1 ? 1:0;
+			currentSum = currentSum % 2;
+
+			resultArray[lenB+1] = currentSum == 1?'1':'0';
+		}
+
+		if(carry ==1)
+			resultArray[0] = '1';
+		return carry == 0 ? new String(resultArray).substring(1):new String(resultArray);
+	}
+
+	public int uniquePaths(int m, int n) {
+		int paths = 0;
+		boolean[][] visited = new boolean[m][n];
+		Stack<int[]> stack = new Stack<>();
+		stack.push(new int[]{0,0});
+		visited[0][0] = true;
+
+		while(!stack.isEmpty()){
+			int[] current = stack.pop();
+
+			if(current[0] == m-1 && current[1] == n-1)
+				paths++;
+
+			if(current[0] + 1 < m && !visited[current[0]+1][current[1]])
+				stack.push(new int[]{current[0]+1,current[1]});
+
+			if(current[1] + 1 < n && !visited[current[0]][current[1]+1])
+				stack.push(new int[]{current[0],current[1]+1});
+
+		}
+
+		return paths;
+	}
 
 	/**@implNote :Rotate List
 	 * @category: Leetcode
@@ -377,8 +651,6 @@ Assumptions:
 	public int divide2(int dividend, int divisor) {
 		if(dividend == Integer.MIN_VALUE){if(divisor == -1)     return   Integer.MAX_VALUE; }
 
-		//if(Math.abs(divisor)>Math.abs(dividend)) return 0;
-
 		int remainder = 0;
 		int quotient = 0;
 		boolean isNegativeResult = false;
@@ -579,61 +851,26 @@ Assumptions:
 	 * @implNote time complexity;
 	 */
 	public String reachTheEnd(String[] grid,int maxTime){
-		/*
-		give a number for all the cells in the grid starting from 0 for (0,0)
-		when you wanna reach any cell by number implement division algorithm wrt colCount as divisor
-		e.g. 11 = 2 (4)+ 3 means (2,3) for 4 columns grid. there is no need to use an additional class for pairs.
-		so the target cell that must be reached is (cRow-1)(cCol-1)
-		*/
-		int nodeNumber = 0;
-		Map<Integer,List<Integer>> graph = new HashMap<>();
-		int cRow = grid.length;
-		int cCol = grid[0].length();
-
-		//construct the connected cells (contains '.'), a graph with adjacency list
-		for (int i = 0; i < cRow; i++) {
-			for (int j = 0; j < cCol; j++) {
-				if (grid[i].charAt(j)=='.'){
-					List<Integer> siblings = new ArrayList<>();
-					if(j<cCol-1 && grid[i].charAt(j+1)=='.')
-						siblings.add(nodeNumber+1);
-					if(i<cRow-1 && grid[i+1].charAt(j)=='.')
-						siblings.add(nodeNumber+cCol);
-					graph.put(nodeNumber,siblings);
+		int m = grid.length;
+		int n = grid[0].length();
+		int[][] times = new int[m][n];
+		for(int i = 0;i<m;i++){
+			for(int j = 0;j<n;j++){
+				if(grid[i].charAt(j) == '#')
+					times[i][j] = 0;
+				else{
+					if(i==0 || j == 0){
+						times[i][j] = (i==0 && j>0 && grid[i].charAt(j-1) == 0)
+								|| (j==0 && i>0 && grid[i-1].charAt(j) == 0) ? 0 : 1;
+					}
+					else
+						times[i][j] = times[i-1][j] +times[i][j-1];
 				}
-				nodeNumber++;
+
 			}
 		}
 
-		int reachTime = 0;
-		int targetCellNo = cCol*cRow-1;
-
-		//implement the dfs algorithm
-		Stack<Integer> stack = new Stack<>();
-		stack.add(0);
-		boolean [][]visited = new boolean[cRow][cCol];
-
-		while (!stack.isEmpty()){
-			Integer currentNode = stack.pop();
-			System.out.println("currentNode: " + currentNode);
-			if(currentNode == targetCellNo && reachTime <= maxTime){
-				return "Yes";
-			}
-
-			reachTime++;
-			int rowCurrent = currentNode/cCol;
-			int colCurrent = currentNode%cCol;
-			if (!visited[rowCurrent][colCurrent]){
-				visited[currentNode/cCol][currentNode%cCol]=true;
-				List<Integer> subNodes = graph.get(currentNode);
-				for (Integer i: subNodes) {
-					if(!visited[i/cCol][i%cCol])
-						stack.push(i);
-				}
-			}
-		}
-
-		return "No";
+		return times[m-1][n-1]>0 && times[m-1][n-1]<= maxTime ? "Yes":"No";
 	}
 
 	/**

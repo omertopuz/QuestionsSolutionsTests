@@ -11,6 +11,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 class SolutionTest {
 
@@ -595,9 +596,9 @@ class SolutionTest {
 	void testReachTheEnd() {
 		assertAll(
 				() -> assertEquals(solution.reachTheEnd(new String[]{"....","....","#..#",".#.."},6),"Yes")
-//				() -> assertEquals(solution.reachTheEnd(new String[]{"..##","#.##","#..."},5),"Yes")
-//		() -> assertEquals(solution.reachTheEnd(new String[]{"..##","#.##","##.."},5),"No")
-//		() -> assertEquals(solution.reachTheEnd(new String[]{".#","#."},2),"No")
+				,() -> assertEquals(solution.reachTheEnd(new String[]{"..##","#.##","#..."},5),"Yes")
+		,() -> assertEquals(solution.reachTheEnd(new String[]{"..##","#.##","##.."},5),"No")
+		,() -> assertEquals(solution.reachTheEnd(new String[]{".#","#."},2),"No")
 		);
 	}
 
@@ -690,5 +691,46 @@ class SolutionTest {
 //						,Arrays.asList(Arrays.asList(2,2,1),Arrays.asList(5)))
 
 		);
+	}
+
+	@Test
+	@DisplayName("Unique Paths")
+	@Tag("Leetcode")
+	void testUniquePaths() {
+		assertAll(
+				() -> assertEquals(solution.uniquePaths(3,7),28)
+		);
+	}
+
+	@Test
+	@DisplayName("Add Binary")
+	@Tag("Leetcode")
+	void testAddBinary() {
+		assertAll(
+//				() -> assertEquals(solution.addBinary("1111","111"),"10110")
+//				() -> assertEquals(solution.addBinary("1","0"),"1")
+//				() -> assertEquals(solution.addBinary("1100","11"),"1111")
+//				() -> assertEquals(solution.addBinary("111","1"),"1000")
+				() -> assertEquals(solution.addBinary("1","111"),"1000")
+		);
+	}
+
+	@Test
+	void testFindCastleCount() {
+		assertAll(
+				() ->assertEquals(solution.findCastleCount(new int[]{2, 3, 2, 3, 2}),5)
+				,() ->assertEquals(solution.findCastleCount(new int[]{2, 2, 3, 4, 3, 3, 2, 2, 1, 1, 2, 5}), 4)
+				,() ->assertEquals(solution.findCastleCount(new int[]{3,3,3,3}),1)
+		);
+	}
+
+	@Test
+	@DisplayName("Merge Sorted Array")
+	@Tag("Leetcode")
+	void testMergeTwoSortedArray() {
+		int[] nums1 = new int[]{1,2,3,0,0,0};
+		int[] nums2 = new int[]{2,5,6};
+		solution.merge(nums1,3,nums2,3);
+		assertArrayEquals(nums1,new int[]{1,2,2,3,5,6});
 	}
 }
